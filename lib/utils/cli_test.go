@@ -256,6 +256,7 @@ func TestUseDocsCommand(t *testing.T) {
 				app := InitCLIParser("TestUpdateDocsUsageTemplate", "This is the main CLI tool.")
 				app.UsageWriter(usageWriter)
 				app.Terminate(func(int) {})
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
 
 				app.Command("hello", "Hello.")
 

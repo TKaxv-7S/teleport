@@ -39,6 +39,7 @@ Flags:
 |---|---|
 {{.Context.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
 {{end -}}
+
 {{if .Context.Args -}}
 Args:
 
@@ -46,6 +47,7 @@ Args:
 |---|---|
 {{.Context.Args|ArgsToTwoColumns|FormatTwoColMarkdownTable}}
 {{end -}}
+
 {{if .App.Commands -}}
 Commands:
 {{template "FormatCommands" .App}}
