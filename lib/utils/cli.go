@@ -22,6 +22,7 @@ import (
 	"bytes"
 	"context"
 	"crypto/x509"
+	_ "embed"
 	"errors"
 	"flag"
 	"fmt"
@@ -554,67 +555,21 @@ func formatTwoColMarkdownTable(rows [][2]string) string {
 // docsUsageTemplate is a help text template for CLI reference documentation.
 // Based on LongHelpTemplate in alecthomas/kingpin. See:
 // https://github.com/alecthomas/kingpin/blob/68c06706edae8d9a6f7806dc575a5a9f47409821/templates.go#L197
-const docsUsageTemplate = `{{define "FormatCommand" -}}
-{{if .FlagSummary}} {{.FlagSummary}}{{end -}}
-{{range .Args}}{{if not .Hidden}} {{if not .Required}}[{{end}}{{if .PlaceHolder}}{{.PlaceHolder}}{{else}}<{{.Name}}>{{end}}{{if .Value|IsCumulative}}...{{end}}{{if not .Required}}]{{end}}{{end}}{{end -}}
-{{end -}}
-
-{{define "FormatCommands" -}}
-{{range .FlattenedCommands -}}
-{{if not .Hidden -}}
-  {{.FullCommand}}{{template "FormatCommand" .}}
-{{.Help|Wrap 4}}
-{{with .Flags|FlagsToTwoColumns}}{{FormatTwoColumnsWithIndent . 4 2}}{{end}}
-{{end -}}
-{{end -}}
-{{end -}}
-
-{{define "FormatUsage" -}}
-{{template "FormatCommand" .}}{{if .Commands}} <command> [<args> ...]{{end}}
-{{if .Help}}
-{{.Help|Wrap 0 -}}
-{{end -}}
-
-{{end -}}
----
-title: {{.App.Name}} Reference
-description: Provides a comprehensive list of commands, arguments, and flags for {{.App.Name}}.
----
-
-This guide provides a comprehensive list of commands, arguments, and flags for
-{{.App.Name}}.
-
-usage: {{.App.Name}}{{template "FormatUsage" .App}}
-
-{{if .Context.Flags -}}
-Flags:
-
-|Flag|Description|
-|---|---|
-{{.Context.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
-{{end -}}
-{{if .Context.Args -}}
-Args:
-
-|Argument|Description|
-|---|---|
-{{.Context.Args|ArgsToTwoColumns|FormatTwoColMarkdownTable}}
-{{end -}}
-{{if .App.Commands -}}
-Commands:
-{{template "FormatCommands" .App}}
-{{end -}}
-`
+//
+//go:embed docs-usage.md
+var docsUsageTemplate string
 
 // UseDocsCommand updates the kingpin usage template to print a docs page.
 // It prepends header to the usage template.
 func UseDocsCommand(app *kingpin.Application) {
-	app.HelpCommand = app.Command("docs", "Create a docs page for the command").PreAction(func(context *kingpin.ParseContext) error {
+	app.HelpCommand = app.Command("docs", "Create a docs page for the command").Hidden().PreAction(func(c *kingpin.ParseContext) error {
 		app.UsageFuncs(map[string]any{
 			"FormatTwoColMarkdownTable": formatTwoColMarkdownTable,
 		})
-		app.UsageTemplate(docsUsageTemplate)
-		app.Usage([]string{})
+		if err := app.UsageForContextWithTemplate(c, 0, docsUsageTemplate); err != nil {
+			return err
+		}
+
 		return nil
 	})
 }

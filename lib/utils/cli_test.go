@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"strings"
 	"testing"
 
 	"github.com/alecthomas/kingpin/v2"
@@ -243,17 +244,16 @@ Commands:
 	}
 }
 
-// TODO: update this for my needs
 func TestUseDocsCommand(t *testing.T) {
 	tests := []struct {
 		name     string
 		makeApp  func(usageWriter io.Writer) *kingpin.Application
-		expected string
+		expected string // The @ character is replaced with a backtick
 	}{
 		{
 			name: "three commands with two flags",
 			makeApp: func(usageWriter io.Writer) *kingpin.Application {
-				app := InitCLIParser("TestUpdateDocsUsageTemplate", "some help message")
+				app := InitCLIParser("TestUpdateDocsUsageTemplate", "This is the main CLI tool.")
 				app.UsageWriter(usageWriter)
 				app.Terminate(func(int) {})
 
@@ -268,7 +268,20 @@ func TestUseDocsCommand(t *testing.T) {
 
 				return app
 			},
-			expected: ``,
+			expected: `---
+title: TestUpdateDocsUsageTemplate Reference
+description: Provides a comprehensive list of commands, arguments, and flags for TestUpdateDocsUsageTemplate.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+TestUpdateDocsUsageTemplate.
+
+@@@code
+$ TestUpdateDocsUsageTemplate  <command> [<args> ...]
+@@@
+
+This is the main CLI tool.
+`,
 		},
 	}
 	for _, tt := range tests {
@@ -278,11 +291,9 @@ func TestUseDocsCommand(t *testing.T) {
 			UseDocsCommand(app)
 			args := []string{"docs"}
 
-			// HelpCommand is triggered on PreAction during Parse.
-			// See kingpin.Application.init for more details.
 			_, err := app.Parse(args)
 			require.NoError(t, err)
-			require.Equal(t, buffer.String(), tt.expected)
+			require.Equal(t, buffer.String(), strings.ReplaceAll(tt.expected, "@", "`"))
 		})
 	}
 }
