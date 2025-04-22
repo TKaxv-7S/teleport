@@ -251,7 +251,7 @@ func TestUseDocsCommand(t *testing.T) {
 		expected string // The @ character is replaced with a backtick
 	}{
 		{
-			name: "three commands with two flags",
+			name: "subcommands flags and global flags",
 			makeApp: func(usageWriter io.Writer) *kingpin.Application {
 				app := InitCLIParser("TestUpdateDocsUsageTemplate", "This is the main CLI tool.")
 				app.UsageWriter(usageWriter)
@@ -262,8 +262,6 @@ func TestUseDocsCommand(t *testing.T) {
 
 				create := app.Command("create", "Create.")
 				create.Flag("name", "The name of the resource").Default("myresource").String()
-				createBox := create.Command("box", "Box.")
-				createBox.Flag("size", "Size of the box in cubic centimeters").Int()
 				createRocket := create.Command("rocket", "Rocket.")
 				createRocket.Flag("launch", "Whether to launch the Rocket").Bool()
 

@@ -6,17 +6,23 @@
 {{define "FormatCommands" -}}
 {{$appName := .Name}}
 {{range .FlattenedCommands -}}
+{{if not .Hidden -}}
+
 ## {{$appName}} {{.FullCommand}}
 
-{{if not .Hidden -}}
-  {{.FullCommand}}{{template "FormatCommand" .}}
-{{.Help|Wrap 4}}
+{{.Help|Wrap 0}}
+Usage:
 
+```code
+$ {{.FullCommand}}{{template "FormatCommand" .}}
+```
+{{if .Flags}}
 Flags:
 
 |Flag|Description|
 |---|---|
 {{.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
+{{end}}
 {{end -}}
 {{end -}}
 {{end -}}
