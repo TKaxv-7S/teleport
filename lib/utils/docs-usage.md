@@ -4,11 +4,19 @@
 {{end -}}
 
 {{define "FormatCommands" -}}
+{{$appName := .Name}}
 {{range .FlattenedCommands -}}
+## {{$appName}} {{.FullCommand}}
+
 {{if not .Hidden -}}
   {{.FullCommand}}{{template "FormatCommand" .}}
 {{.Help|Wrap 4}}
-{{with .Flags|FlagsToTwoColumns}}{{FormatTwoColumnsWithIndent . 4 2}}{{end}}
+
+Flags:
+
+|Flag|Description|
+|---|---|
+{{.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
 {{end -}}
 {{end -}}
 {{end -}}
@@ -41,7 +49,7 @@ Global flags:
 {{end -}}
 {{if .Context.Args -}}
 
-Args:
+Arguments:
 
 |Argument|Description|
 |---|---|
@@ -49,7 +57,6 @@ Args:
 {{end -}}
 {{if .App.Commands -}}
 
-Commands:
 {{template "FormatCommands" .App}}
 {{end -}}
 
