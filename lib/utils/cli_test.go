@@ -278,10 +278,16 @@ This guide provides a comprehensive list of commands, arguments, and flags for
 TestUpdateDocsUsageTemplate.
 
 @@@code
-$ TestUpdateDocsUsageTemplate  <command> [<args> ...]
+$ TestUpdateDocsUsageTemplate [<flags>] <command> [<args> ...]
 @@@
 
 This is the main CLI tool.
+
+Global flags:
+
+|Flag|Description|
+|---|---|
+|--config="config.yaml"|The location of the config file|
 `,
 		},
 	}
@@ -294,7 +300,7 @@ This is the main CLI tool.
 
 			_, err := app.Parse(args)
 			require.NoError(t, err)
-			require.Equal(t, buffer.String(), strings.ReplaceAll(tt.expected, "@", "`"))
+			require.Equal(t, strings.ReplaceAll(tt.expected, "@", "`"), buffer.String())
 		})
 	}
 }

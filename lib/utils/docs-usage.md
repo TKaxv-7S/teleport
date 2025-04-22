@@ -15,7 +15,7 @@
 
 {{define "FormatUsage" -}}
 ```code
-$ {{.Name}} {{template "FormatCommand" .}}{{if .Commands}} <command> [<args> ...]{{end}}
+$ {{.Name}}{{template "FormatCommand" .}}{{if .Commands}} <command> [<args> ...]{{end}}
 ```
 {{if .Help}}
 {{.Help|Wrap 0 -}}
@@ -31,24 +31,24 @@ This guide provides a comprehensive list of commands, arguments, and flags for
 {{.App.Name}}.
 
 {{template "FormatUsage" .App}}
-
 {{if .Context.Flags -}}
-Flags:
+
+Global flags:
 
 |Flag|Description|
 |---|---|
 {{.Context.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
 {{end -}}
-
 {{if .Context.Args -}}
+
 Args:
 
 |Argument|Description|
 |---|---|
 {{.Context.Args|ArgsToTwoColumns|FormatTwoColMarkdownTable}}
 {{end -}}
-
 {{if .App.Commands -}}
+
 Commands:
 {{template "FormatCommands" .App}}
 {{end -}}
