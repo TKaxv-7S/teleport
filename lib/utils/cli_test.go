@@ -245,50 +245,38 @@ Commands:
 
 // TODO: update this for my needs
 func TestUseDocsCommand(t *testing.T) {
-	makeApp := func(usageWriter io.Writer) *kingpin.Application {
-		app := InitCLIParser("TestUpdateDocsUsageTemplate", "some help message")
-		app.UsageWriter(usageWriter)
-		app.Terminate(func(int) {})
-
-		app.Command("hello", "Hello.")
-
-		create := app.Command("create", "Create.")
-		create.Flag("name", "The name of the resource").Default("myresource").String()
-		createBox := create.Command("box", "Box.")
-		createBox.Flag("size", "Size of the box in cubic centimeters").Int()
-		createRocket := create.Command("rocket", "Rocket.")
-		createRocket.Flag("launch", "Whether to launch the Rocket").Bool()
-		UseDocsCommand(app)
-
-		return app
-	}
-
 	tests := []struct {
-		name      string
-		inputArgs []string
-		expected  string
+		name     string
+		makeApp  func(usageWriter io.Writer) *kingpin.Application
+		expected string
 	}{
 		{
-			name:      "no subcommand",
-			inputArgs: []string{},
-			expected:  ``,
-		},
-		{
-			name:      "known subcommand",
-			inputArgs: []string{"create"},
-			expected:  ``,
-		},
-		{
-			name:      "unknown subcommand",
-			inputArgs: []string{"unknown"},
-			expected:  ``,
+			name: "three commands with two flags",
+			makeApp: func(usageWriter io.Writer) *kingpin.Application {
+				app := InitCLIParser("TestUpdateDocsUsageTemplate", "some help message")
+				app.UsageWriter(usageWriter)
+				app.Terminate(func(int) {})
+
+				app.Command("hello", "Hello.")
+
+				create := app.Command("create", "Create.")
+				create.Flag("name", "The name of the resource").Default("myresource").String()
+				createBox := create.Command("box", "Box.")
+				createBox.Flag("size", "Size of the box in cubic centimeters").Int()
+				createRocket := create.Command("rocket", "Rocket.")
+				createRocket.Flag("launch", "Whether to launch the Rocket").Bool()
+
+				return app
+			},
+			expected: ``,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			var buffer bytes.Buffer
-			app := makeApp(&buffer)
-			args := append([]string{"docs"}, tt.inputArgs...)
+			app := tt.makeApp(&buffer)
+			UseDocsCommand(app)
+			args := []string{"docs"}
 
 			// HelpCommand is triggered on PreAction during Parse.
 			// See kingpin.Application.init for more details.
