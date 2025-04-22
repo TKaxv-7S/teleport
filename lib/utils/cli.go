@@ -556,7 +556,7 @@ func formatTwoColMarkdownTable(rows [][2]string) string {
 // Based on LongHelpTemplate in alecthomas/kingpin. See:
 // https://github.com/alecthomas/kingpin/blob/68c06706edae8d9a6f7806dc575a5a9f47409821/templates.go#L197
 //
-//go:embed docs-usage.md
+//go:embed docs-usage.md.tmpl
 var docsUsageTemplate string
 
 // UseDocsCommand updates the kingpin usage template to print a docs page.
