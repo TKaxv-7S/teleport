@@ -14,15 +14,15 @@
 Usage:
 
 ```code
-$ {{.FullCommand}}{{template "FormatCommand" .}}
+$ {{$appName}} {{.FullCommand}}{{template "FormatCommand" .}}
 ```
 {{if .Flags}}
 Flags:
 
 |Flag|Description|
 |---|---|
-{{.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
-{{end}}
+{{.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable -}}
+{{end -}}
 {{end -}}
 {{end -}}
 {{end -}}
@@ -65,4 +65,3 @@ Arguments:
 
 {{template "FormatCommands" .App}}
 {{end -}}
-

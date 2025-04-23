@@ -253,7 +253,7 @@ func TestUseDocsCommand(t *testing.T) {
 		{
 			name: "subcommands flags and global flags",
 			makeApp: func(usageWriter io.Writer) *kingpin.Application {
-				app := InitCLIParser("TestUpdateDocsUsageTemplate", "This is the main CLI tool.")
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
 				app.UsageWriter(usageWriter)
 				app.Terminate(func(int) {})
 				app.Flag("config", "The location of the config file").Default("config.yaml").String()
@@ -268,15 +268,15 @@ func TestUseDocsCommand(t *testing.T) {
 				return app
 			},
 			expected: `---
-title: TestUpdateDocsUsageTemplate Reference
-description: Provides a comprehensive list of commands, arguments, and flags for TestUpdateDocsUsageTemplate.
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
 ---
 
 This guide provides a comprehensive list of commands, arguments, and flags for
-TestUpdateDocsUsageTemplate.
+myapp.
 
 @@@code
-$ TestUpdateDocsUsageTemplate [<flags>] <command> [<args> ...]
+$ myapp [<flags>] <command> [<args> ...]
 @@@
 
 This is the main CLI tool.
@@ -286,6 +286,40 @@ Global flags:
 |Flag|Description|
 |---|---|
 |--config="config.yaml"|The location of the config file|
+
+## myapp help
+
+Show help.
+
+Usage:
+
+@@@code
+$ myapp help [<command>...]
+@@@
+## myapp hello
+
+Hello.
+
+Usage:
+
+@@@code
+$ myapp hello
+@@@
+## myapp create rocket
+
+Rocket.
+
+Usage:
+
+@@@code
+$ myapp create rocket [<flags>]
+@@@
+
+Flags:
+
+|Flag|Description|
+|---|---|
+|--[no-]launch|Whether to launch the Rocket|
 `,
 		},
 	}
