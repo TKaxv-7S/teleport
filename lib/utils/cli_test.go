@@ -244,7 +244,7 @@ Commands:
 	}
 }
 
-func TestUseDocsCommand(t *testing.T) {
+func TestPrintCLIDocs(t *testing.T) {
 	tests := []struct {
 		name     string
 		makeApp  func() *kingpin.Application
@@ -343,7 +343,7 @@ This guide provides a comprehensive list of commands, arguments, and flags for
 myapp.
 
 @@@code
-$ myapp [<flags>] <command> [<args> ...]
+$ myapp [<flags>]
 @@@
 
 This is the main CLI tool.
@@ -355,22 +355,6 @@ Global flags:
 |--config="config.yaml"|The location of the config file|
 |--verbosity=3|Verbosity level.|
 |--[no-]dry-run|Whether to use dry-run mode|
-
-## myapp help
-
-Show help.
-
-Usage:
-
-@@@code
-$ myapp help [<command>...]
-@@@
-
-Arguments:
-
-|Argument|Description|
-|---|---|
-|[<command>]|Show help on command.|
 
 `,
 		},
@@ -509,11 +493,7 @@ Arguments:
 			app := tt.makeApp()
 			var buffer bytes.Buffer
 			app.Terminate(func(int) {})
-			UseDocsCommand(app, &buffer)
-			args := []string{"docs"}
-
-			_, err := app.Parse(args)
-			require.NoError(t, err)
+			PrintCLIDocs(&buffer, app)
 			require.Equal(t, strings.ReplaceAll(tt.expected, "@", "`"), buffer.String())
 		})
 	}

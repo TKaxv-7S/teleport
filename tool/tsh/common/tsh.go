@@ -748,9 +748,6 @@ func Run(ctx context.Context, args []string, opts ...CliOption) error {
 	// configure CLI argument parser:
 	app := utils.InitCLIParser("tsh", "Teleport Command Line Client").Interspersed(true)
 
-	// Add the "docs" command
-	utils.UseDocsCommand(app, os.Stdout)
-
 	app.Flag("login", "Remote host login").Short('l').Envar(loginEnvVar).StringVar(&cf.NodeLogin)
 	app.Flag("proxy", "Teleport proxy address").Envar(proxyEnvVar).StringVar(&cf.Proxy)
 	app.Flag("nocache", "do not cache cluster discovery locally").Hidden().BoolVar(&cf.NoCache)
@@ -1254,6 +1251,8 @@ func Run(ctx context.Context, args []string, opts ...CliOption) error {
 		puttyConfig.Hidden()
 	}
 
+	printDocs := app.Command("docs", "Print CLI documentation").Hidden()
+
 	// FIDO2, TouchID and WebAuthnWin commands.
 	f2 := fido2.NewCommand(app)
 	tid := touchid.NewCommand(app)
@@ -1672,6 +1671,8 @@ func Run(ctx context.Context, args []string, opts ...CliOption) error {
 		err = gitCmd.config.run(&cf)
 	case gitCmd.clone.FullCommand():
 		err = gitCmd.clone.run(&cf)
+	case printDocs.FullCommand():
+		utils.PrintCLIDocs(os.Stdout, app)
 	default:
 		// Handle commands that might not be available.
 		switch {

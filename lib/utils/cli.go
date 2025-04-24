@@ -559,18 +559,13 @@ func formatTwoColMarkdownTable(rows [][2]string) string {
 //go:embed docs-usage.md.tmpl
 var docsUsageTemplate string
 
-// UseDocsCommand updates the kingpin usage template to print a docs page.
+// PrintCLIDocs updates the kingpin usage template to print a docs page.
 // It prepends header to the usage template.
-func UseDocsCommand(app *kingpin.Application, usageWriter io.Writer) {
-	app.Command("docs", "Create a docs page for the command").Hidden().PreAction(func(c *kingpin.ParseContext) error {
-		app.UsageWriter(usageWriter)
-		app.UsageFuncs(map[string]any{
-			"FormatTwoColMarkdownTable": formatTwoColMarkdownTable,
-		})
-		if err := app.UsageForContextWithTemplate(c, 0, docsUsageTemplate); err != nil {
-			return err
-		}
-
-		return nil
+func PrintCLIDocs(usageWriter io.Writer, app *kingpin.Application) {
+	app.UsageWriter(usageWriter)
+	app.UsageFuncs(map[string]any{
+		"FormatTwoColMarkdownTable": formatTwoColMarkdownTable,
 	})
+	app.UsageTemplate(docsUsageTemplate)
+	app.Usage([]string{""})
 }
