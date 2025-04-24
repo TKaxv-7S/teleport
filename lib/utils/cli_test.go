@@ -292,6 +292,12 @@ Usage:
 $ myapp help [<command>...]
 @@@
 
+Arguments:
+
+|Argument|Description|
+|---|---|
+|[<command>]|Show help on command.|
+
 ## myapp hello
 
 Hello.
@@ -316,7 +322,8 @@ Flags:
 
 |Flag|Description|
 |---|---|
-|--[no-]launch|Whether to launch the Rocket|`,
+|--[no-]launch|Whether to launch the Rocket|
+`,
 		},
 		{
 			name: "multiple main command flags",
@@ -358,6 +365,12 @@ Usage:
 @@@code
 $ myapp help [<command>...]
 @@@
+
+Arguments:
+
+|Argument|Description|
+|---|---|
+|[<command>]|Show help on command.|
 
 `,
 		},
@@ -401,6 +414,12 @@ Usage:
 $ myapp help [<command>...]
 @@@
 
+Arguments:
+
+|Argument|Description|
+|---|---|
+|[<command>]|Show help on command.|
+
 ## myapp create
 
 Create a resource.
@@ -416,7 +435,8 @@ Flags:
 |Flag|Description|
 |---|---|
 |--verbosity=3|Verbosity level.|
-|--[no-]dry-run|Whether to use dry-run mode|`,
+|--[no-]dry-run|Whether to use dry-run mode|
+`,
 		},
 		{
 			name: "multiple sub-command args",
@@ -458,6 +478,12 @@ Usage:
 $ myapp help [<command>...]
 @@@
 
+Arguments:
+
+|Argument|Description|
+|---|---|
+|[<command>]|Show help on command.|
+
 ## myapp create
 
 Create.
@@ -472,8 +498,10 @@ Arguments:
 
 |Argument|Description|
 |---|---|
-|verbosity=3|Verbosity level.|
-|dry-run|Whether to use dry-run mode|`,
+|[<verbosity>]|Verbosity level.|
+|[<dry-run>]|Whether to use dry-run mode|
+
+`,
 		},
 	}
 	for _, tt := range tests {
