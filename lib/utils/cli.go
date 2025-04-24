@@ -561,8 +561,9 @@ var docsUsageTemplate string
 
 // UseDocsCommand updates the kingpin usage template to print a docs page.
 // It prepends header to the usage template.
-func UseDocsCommand(app *kingpin.Application) {
+func UseDocsCommand(app *kingpin.Application, usageWriter io.Writer) {
 	app.Command("docs", "Create a docs page for the command").Hidden().PreAction(func(c *kingpin.ParseContext) error {
+		app.UsageWriter(usageWriter)
 		app.UsageFuncs(map[string]any{
 			"FormatTwoColMarkdownTable": formatTwoColMarkdownTable,
 		})

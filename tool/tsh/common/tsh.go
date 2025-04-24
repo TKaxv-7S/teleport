@@ -749,7 +749,7 @@ func Run(ctx context.Context, args []string, opts ...CliOption) error {
 	app := utils.InitCLIParser("tsh", "Teleport Command Line Client").Interspersed(true)
 
 	// Add the "docs" command
-	utils.UseDocsCommand(app)
+	utils.UseDocsCommand(app, os.Stdout)
 
 	app.Flag("login", "Remote host login").Short('l').Envar(loginEnvVar).StringVar(&cf.NodeLogin)
 	app.Flag("proxy", "Teleport proxy address").Envar(proxyEnvVar).StringVar(&cf.Proxy)

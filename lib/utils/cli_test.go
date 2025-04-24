@@ -508,9 +508,8 @@ Arguments:
 		t.Run(tt.name, func(t *testing.T) {
 			app := tt.makeApp()
 			var buffer bytes.Buffer
-			app.UsageWriter(&buffer)
 			app.Terminate(func(int) {})
-			UseDocsCommand(app)
+			UseDocsCommand(app, &buffer)
 			args := []string{"docs"}
 
 			_, err := app.Parse(args)
