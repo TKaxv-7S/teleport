@@ -547,7 +547,7 @@ func FormatAlert(alert types.ClusterAlert) string {
 func formatTwoColMarkdownTable(rows [][2]string) string {
 	buf := bytes.NewBuffer(nil)
 	for _, r := range rows {
-		buf.WriteString("|" + r[0] + "|" + r[1] + "|")
+		buf.WriteString("\n|" + r[0] + "|" + r[1] + "|")
 	}
 	return buf.String()
 }
@@ -562,7 +562,7 @@ var docsUsageTemplate string
 // UseDocsCommand updates the kingpin usage template to print a docs page.
 // It prepends header to the usage template.
 func UseDocsCommand(app *kingpin.Application) {
-	app.HelpCommand = app.Command("docs", "Create a docs page for the command").Hidden().PreAction(func(c *kingpin.ParseContext) error {
+	app.Command("docs", "Create a docs page for the command").Hidden().PreAction(func(c *kingpin.ParseContext) error {
 		app.UsageFuncs(map[string]any{
 			"FormatTwoColMarkdownTable": formatTwoColMarkdownTable,
 		})

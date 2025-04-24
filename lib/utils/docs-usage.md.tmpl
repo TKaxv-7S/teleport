@@ -21,7 +21,7 @@ Flags:
 
 |Flag|Description|
 |---|---|
-{{.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable -}}
+{{- .Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable -}}
 {{end -}}
 {{end -}}
 {{end -}}
@@ -51,7 +51,7 @@ Global flags:
 
 |Flag|Description|
 |---|---|
-{{.Context.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
+{{- .Context.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
 {{end -}}
 {{if .Context.Args -}}
 
@@ -59,7 +59,7 @@ Arguments:
 
 |Argument|Description|
 |---|---|
-{{.Context.Args|ArgsToTwoColumns|FormatTwoColMarkdownTable}}
+{{- .Context.Args|ArgsToTwoColumns|FormatTwoColMarkdownTable}}
 {{end -}}
 {{if .App.Commands -}}
 

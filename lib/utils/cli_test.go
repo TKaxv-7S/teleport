@@ -247,24 +247,19 @@ Commands:
 func TestUseDocsCommand(t *testing.T) {
 	tests := []struct {
 		name     string
-		makeApp  func(usageWriter io.Writer) *kingpin.Application
+		makeApp  func() *kingpin.Application
 		expected string // The @ character is replaced with a backtick
 	}{
 		{
 			name: "subcommands flags and global flags",
-			makeApp: func(usageWriter io.Writer) *kingpin.Application {
+			makeApp: func() *kingpin.Application {
 				app := InitCLIParser("myapp", "This is the main CLI tool.")
-				app.UsageWriter(usageWriter)
-				app.Terminate(func(int) {})
 				app.Flag("config", "The location of the config file").Default("config.yaml").String()
-
 				app.Command("hello", "Hello.")
-
 				create := app.Command("create", "Create.")
 				create.Flag("name", "The name of the resource").Default("myresource").String()
 				createRocket := create.Command("rocket", "Rocket.")
 				createRocket.Flag("launch", "Whether to launch the Rocket").Bool()
-
 				return app
 			},
 			expected: `---
@@ -322,11 +317,59 @@ Flags:
 |--[no-]launch|Whether to launch the Rocket|
 `,
 		},
+		{
+			name: "multiple main command flags",
+			makeApp: func() *kingpin.Application {
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
+				app.Flag("verbosity", "Verbosity level.").Default("3").Int()
+				app.Flag("dry-run", "Whether to use dry-run mode").Default("false").Bool()
+				return app
+			},
+			expected: `---
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+myapp.
+
+@@@code
+$ myapp [<flags>] <command> [<args> ...]
+@@@
+
+This is the main CLI tool.
+
+Global flags:
+
+|Flag|Description|
+|---|---|
+|--config="config.yaml"|The location of the config file|
+|--verbosity=3|Verbosity level.|
+|--[no-]dry-run|Whether to use dry-run mode|
+
+## myapp help
+
+Show help.
+
+Usage:
+
+@@@code
+$ myapp help [<command>...]
+@@@
+
+`,
+		},
+		// TODO: multiple subcommand flags
+		// TODO: multiple main command args
+		// TODO: multiple subcommand args
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			app := tt.makeApp()
 			var buffer bytes.Buffer
-			app := tt.makeApp(&buffer)
+			app.UsageWriter(&buffer)
+			app.Terminate(func(int) {})
 			UseDocsCommand(app)
 			args := []string{"docs"}
 
