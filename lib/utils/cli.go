@@ -564,13 +564,13 @@ func flagsToColumns(f []*kingpin.FlagModel) [][3]string {
 	for _, flag := range f {
 		defaultVal := "none"
 		if len(flag.Default) > 0 {
-			defaultVal = strings.Join(flag.Default, ",")
+			defaultVal = formatDefaultValues(flag.Default)
 		}
 		if !flag.Hidden {
 			rows = append(rows, [3]string{
 				formatFlagForTable(haveShort, flag),
 				defaultVal,
-				flag.Help,
+				formatHelp(flag.Help),
 			})
 		}
 	}
@@ -583,7 +583,7 @@ func argsToColumns(a []*kingpin.ArgModel) [][3]string {
 		if !arg.Hidden {
 			defaultVal := "none"
 			if len(arg.Default) > 0 {
-				defaultVal = strings.Join(arg.Default, ",")
+				defaultVal = formatDefaultValues(arg.Default)
 			}
 
 			if arg.Required {
@@ -595,7 +595,7 @@ func argsToColumns(a []*kingpin.ArgModel) [][3]string {
 			rows = append(rows, [3]string{
 				arg.Name,
 				defaultVal,
-				arg.Help,
+				formatHelp(arg.Help),
 			})
 		}
 	}
@@ -618,6 +618,18 @@ func formatFlagForTable(haveShort bool, flag *kingpin.FlagModel) string {
 		}
 	}
 	return flagString
+}
+
+func formatDefaultValues(vals []string) string {
+	ret := make([]string, len(vals))
+	for i, v := range vals {
+		ret[i] = fmt.Sprintf("`%v`", v)
+	}
+	return strings.Join(ret, ",")
+}
+
+func formatHelp(help string) string {
+	return strings.NewReplacer("{", `\{`, "}", `\}`).Replace(help)
 }
 
 // docsUsageTemplate is a help text template for CLI reference documentation.
