@@ -541,15 +541,83 @@ func FormatAlert(alert types.ClusterAlert) string {
 	return buf.String()
 }
 
-// formatTwoColMarkdownTable formats the provided row data into a two-column
+// formatThreeColMarkdownTable formats the provided row data into a two-column
 // Markdown table, minus the header. Must take a [][2]string to accept the
 // result of ArgsToTwoColumns and FlagsToTwoColumns.
-func formatTwoColMarkdownTable(rows [][2]string) string {
+func formatThreeColMarkdownTable(rows [][3]string) string {
 	buf := bytes.NewBuffer(nil)
 	for _, r := range rows {
-		buf.WriteString("\n|" + r[0] + "|" + r[1] + "|")
+		buf.WriteString("\n|" + r[0] + "|" + r[1] + "|" + r[2] + "|")
 	}
 	return buf.String()
+}
+
+func flagsToColumns(f []*kingpin.FlagModel) [][3]string {
+	rows := [][3]string{}
+	haveShort := false
+	for _, flag := range f {
+		if flag.Short != 0 {
+			haveShort = true
+			break
+		}
+	}
+	for _, flag := range f {
+		defaultVal := "none"
+		if len(flag.Default) > 0 {
+			defaultVal = strings.Join(flag.Default, ",")
+		}
+		if !flag.Hidden {
+			rows = append(rows, [3]string{
+				formatFlagForTable(haveShort, flag),
+				defaultVal,
+				flag.Help,
+			})
+		}
+	}
+	return rows
+}
+
+func argsToColumns(a []*kingpin.ArgModel) [][3]string {
+	rows := [][3]string{}
+	for _, arg := range a {
+		if !arg.Hidden {
+			defaultVal := "none"
+			if len(arg.Default) > 0 {
+				defaultVal = strings.Join(arg.Default, ",")
+			}
+
+			if arg.Required {
+				defaultVal += " (required)"
+			} else {
+				defaultVal += " (optional)"
+			}
+
+			rows = append(rows, [3]string{
+				arg.Name,
+				defaultVal,
+				arg.Help,
+			})
+		}
+	}
+	return rows
+}
+
+func formatFlagForTable(haveShort bool, flag *kingpin.FlagModel) string {
+	flagString := ""
+	flagName := flag.Name
+	if flag.IsBoolFlag() {
+		flagName = "[no-]" + flagName
+	}
+	if flag.Short != 0 {
+		flagString += fmt.Sprintf("`-%c`, `--%s`", flag.Short, flagName)
+	} else {
+		if haveShort {
+			flagString += fmt.Sprintf("    `--%s`", flagName)
+		} else {
+			flagString += fmt.Sprintf("`--%s`", flagName)
+		}
+	}
+	return flagString
 }
 
 // docsUsageTemplate is a help text template for CLI reference documentation.
@@ -564,7 +632,9 @@ var docsUsageTemplate string
 func PrintCLIDocs(usageWriter io.Writer, app *kingpin.Application) {
 	app.UsageWriter(usageWriter)
 	app.UsageFuncs(map[string]any{
-		"FormatTwoColMarkdownTable": formatTwoColMarkdownTable,
+		"FormatThreeColMarkdownTable": formatThreeColMarkdownTable,
+		"FlagsToColumns":              flagsToColumns,
+		"ArgsToColumns":               argsToColumns,
 	})
 	app.UsageTemplate(docsUsageTemplate)
 	app.Usage([]string{""})

@@ -278,9 +278,9 @@ This is the main CLI tool.
 
 Global flags:
 
-|Flag|Description|
-|---|---|
-|--config="config.yaml"|The location of the config file|
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|config.yaml|The location of the config file|
 
 ## myapp help
 
@@ -294,9 +294,9 @@ $ myapp help [<command>...]
 
 Arguments:
 
-|Argument|Description|
-|---|---|
-|[<command>]|Show help on command.|
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
 
 ## myapp hello
 
@@ -320,9 +320,9 @@ $ myapp create rocket [<flags>]
 
 Flags:
 
-|Flag|Description|
-|---|---|
-|--[no-]launch|Whether to launch the Rocket|
+|Flag|Default|Description|
+|---|---|---|
+|@--[no-]launch@|none|Whether to launch the Rocket|
 `,
 		},
 		{
@@ -350,11 +350,11 @@ This is the main CLI tool.
 
 Global flags:
 
-|Flag|Description|
-|---|---|
-|--config="config.yaml"|The location of the config file|
-|--verbosity=3|Verbosity level.|
-|--[no-]dry-run|Whether to use dry-run mode|
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|config.yaml|The location of the config file|
+|@--verbosity@|3|Verbosity level.|
+|@--[no-]dry-run@|false|Whether to use dry-run mode|
 
 `,
 		},
@@ -384,9 +384,9 @@ This is the main CLI tool.
 
 Global flags:
 
-|Flag|Description|
-|---|---|
-|--config="config.yaml"|The location of the config file|
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|config.yaml|The location of the config file|
 
 ## myapp help
 
@@ -400,9 +400,9 @@ $ myapp help [<command>...]
 
 Arguments:
 
-|Argument|Description|
-|---|---|
-|[<command>]|Show help on command.|
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
 
 ## myapp create
 
@@ -416,10 +416,10 @@ $ myapp create [<flags>]
 
 Flags:
 
-|Flag|Description|
-|---|---|
-|--verbosity=3|Verbosity level.|
-|--[no-]dry-run|Whether to use dry-run mode|
+|Flag|Default|Description|
+|---|---|---|
+|@--verbosity@|3|Verbosity level.|
+|@--[no-]dry-run@|false|Whether to use dry-run mode|
 `,
 		},
 		{
@@ -448,9 +448,9 @@ This is the main CLI tool.
 
 Global flags:
 
-|Flag|Description|
-|---|---|
-|--config="config.yaml"|The location of the config file|
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|config.yaml|The location of the config file|
 
 ## myapp help
 
@@ -464,9 +464,9 @@ $ myapp help [<command>...]
 
 Arguments:
 
-|Argument|Description|
-|---|---|
-|[<command>]|Show help on command.|
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
 
 ## myapp create
 
@@ -480,10 +480,10 @@ $ myapp create [<verbosity>] [<dry-run>]
 
 Arguments:
 
-|Argument|Description|
-|---|---|
-|[<verbosity>]|Verbosity level.|
-|[<dry-run>]|Whether to use dry-run mode|
+|Argument|Default|Description|
+|---|---|---|
+|verbosity|3 (optional)|Verbosity level.|
+|dry-run|false (optional)|Whether to use dry-run mode|
 
 `,
 		},

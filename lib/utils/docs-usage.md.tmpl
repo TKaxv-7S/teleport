@@ -19,16 +19,16 @@ $ {{$appName}} {{.FullCommand}}{{template "FormatCommand" .}}
 {{ if .Flags -}}
 Flags:
 
-|Flag|Description|
-|---|---|
-{{- .Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable }}
+|Flag|Default|Description|
+|---|---|---|
+{{- .Flags|FlagsToColumns|FormatThreeColMarkdownTable }}
 {{end -}}
 {{ if .Args -}}
 Arguments:
 
-|Argument|Description|
-|---|---|
-{{- .Args|ArgsToTwoColumns|FormatTwoColMarkdownTable }}
+|Argument|Default|Description|
+|---|---|---|
+{{- .Args|ArgsToColumns|FormatThreeColMarkdownTable }}
 
 {{end -}}
 {{end -}}
@@ -57,17 +57,17 @@ This guide provides a comprehensive list of commands, arguments, and flags for
 {{if .Context.Flags -}}
 Global flags:
 
-|Flag|Description|
-|---|---|
-{{- .Context.Flags|FlagsToTwoColumns|FormatTwoColMarkdownTable}}
+|Flag|Default|Description|
+|---|---|---|
+{{- .Context.Flags|FlagsToColumns|FormatThreeColMarkdownTable}}
 
 {{end -}}
 {{if .Context.Args -}}
 Arguments:
 
-|Argument|Description|
-|---|---|
-{{- .Context.Args|ArgsToTwoColumns|FormatTwoColMarkdownTable}}
+|Argument|Default|Description|
+|---|---|---|
+{{- .Context.Args|ArgsToColumns|FormatThreeColMarkdownTable}}
 
 {{end -}}
 {{if .App.Commands -}}
