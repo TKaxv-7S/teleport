@@ -422,8 +422,8 @@ Flags:
 			name: "multiple sub-command args",
 			makeApp: func() *kingpin.Application {
 				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
 				create := app.Command("create", "Create.")
-				create.Arg("config", "The location of the config file").Default("config.yaml").String()
 				create.Arg("verbosity", "Verbosity level.").Default("3").Int()
 				create.Arg("dry-run", "Whether to use dry-run mode").Default("false").Bool()
 				return app
@@ -447,8 +447,6 @@ Global flags:
 |Flag|Description|
 |---|---|
 |--config="config.yaml"|The location of the config file|
-|--verbosity=3|Verbosity level.|
-|--[no-]dry-run|Whether to use dry-run mode|
 
 ## myapp help
 
@@ -460,7 +458,22 @@ Usage:
 $ myapp help [<command>...]
 @@@
 
-`,
+## myapp create
+
+Create.
+
+Usage:
+
+@@@code
+$ myapp create [<verbosity>] [<dry-run>]
+@@@
+
+Arguments:
+
+|Argument|Description|
+|---|---|
+|verbosity=3|Verbosity level.|
+|dry-run|Whether to use dry-run mode|`,
 		},
 	}
 	for _, tt := range tests {
