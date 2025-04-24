@@ -291,6 +291,7 @@ Usage:
 @@@code
 $ myapp help [<command>...]
 @@@
+
 ## myapp hello
 
 Hello.
@@ -300,6 +301,7 @@ Usage:
 @@@code
 $ myapp hello
 @@@
+
 ## myapp create rocket
 
 Rocket.
@@ -314,8 +316,7 @@ Flags:
 
 |Flag|Description|
 |---|---|
-|--[no-]launch|Whether to launch the Rocket|
-`,
+|--[no-]launch|Whether to launch the Rocket|`,
 		},
 		{
 			name: "multiple main command flags",
@@ -364,8 +365,8 @@ $ myapp help [<command>...]
 			name: "multiple subcommand flags",
 			makeApp: func() *kingpin.Application {
 				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
 				create := app.Command("create", "Create a resource.")
-				create.Flag("config", "The location of the config file").Default("config.yaml").String()
 				create.Flag("verbosity", "Verbosity level.").Default("3").Int()
 				create.Flag("dry-run", "Whether to use dry-run mode").Default("false").Bool()
 				return app
@@ -379,10 +380,16 @@ This guide provides a comprehensive list of commands, arguments, and flags for
 myapp.
 
 @@@code
-$ myapp <command> [<args> ...]
+$ myapp [<flags>] <command> [<args> ...]
 @@@
 
 This is the main CLI tool.
+
+Global flags:
+
+|Flag|Description|
+|---|---|
+|--config="config.yaml"|The location of the config file|
 
 ## myapp help
 
@@ -408,10 +415,8 @@ Flags:
 
 |Flag|Description|
 |---|---|
-|--config="config.yaml"|The location of the config file|
 |--verbosity=3|Verbosity level.|
-|--[no-]dry-run|Whether to use dry-run mode|
-`,
+|--[no-]dry-run|Whether to use dry-run mode|`,
 		},
 		// TODO: multiple main command args
 		// TODO: multiple subcommand args

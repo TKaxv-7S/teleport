@@ -16,7 +16,8 @@ Usage:
 ```code
 $ {{$appName}} {{.FullCommand}}{{template "FormatCommand" .}}
 ```
-{{if .Flags}}
+
+{{ if .Flags -}}
 Flags:
 
 |Flag|Description|
@@ -63,5 +64,5 @@ Arguments:
 {{end -}}
 {{if .App.Commands -}}
 
-{{template "FormatCommands" .App}}
+{{template "FormatCommands" .App -}}
 {{end -}}
