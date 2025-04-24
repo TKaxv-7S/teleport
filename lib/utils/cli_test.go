@@ -418,8 +418,50 @@ Flags:
 |--verbosity=3|Verbosity level.|
 |--[no-]dry-run|Whether to use dry-run mode|`,
 		},
-		// TODO: multiple main command args
-		// TODO: multiple subcommand args
+		{
+			name: "multiple sub-command args",
+			makeApp: func() *kingpin.Application {
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				create := app.Command("create", "Create.")
+				create.Arg("config", "The location of the config file").Default("config.yaml").String()
+				create.Arg("verbosity", "Verbosity level.").Default("3").Int()
+				create.Arg("dry-run", "Whether to use dry-run mode").Default("false").Bool()
+				return app
+			},
+			expected: `---
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+myapp.
+
+@@@code
+$ myapp [<flags>] <command> [<args> ...]
+@@@
+
+This is the main CLI tool.
+
+Global flags:
+
+|Flag|Description|
+|---|---|
+|--config="config.yaml"|The location of the config file|
+|--verbosity=3|Verbosity level.|
+|--[no-]dry-run|Whether to use dry-run mode|
+
+## myapp help
+
+Show help.
+
+Usage:
+
+@@@code
+$ myapp help [<command>...]
+@@@
+
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
