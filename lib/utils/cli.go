@@ -30,6 +30,7 @@ import (
 	"log/slog"
 	"os"
 	"runtime"
+	"sort"
 	"strconv"
 	"strings"
 	"sync"
@@ -620,6 +621,31 @@ func formatFlagForTable(haveShort bool, flag *kingpin.FlagModel) string {
 	return flagString
 }
 
+type cmdModelCollection struct {
+	commands []*kingpin.CmdModel
+}
+
+func (c *cmdModelCollection) Len() int {
+	return len(c.commands)
+}
+
+func (c *cmdModelCollection) Less(i, j int) bool {
+	return c.commands[i].Name < c.commands[j].Name
+}
+
+func (c *cmdModelCollection) Swap(i, j int) {
+	c.commands[i], c.commands[j] = c.commands[j], c.commands[i]
+}
+
+func sortCommandsByName(cmds []*kingpin.CmdModel) []*kingpin.CmdModel {
+	col := cmdModelCollection{
+		commands: cmds,
+	}
+
+	sort.Stable(&col)
+	return col.commands
+}
+
 func formatDefaultValues(vals []string) string {
 	ret := make([]string, len(vals))
 	for i, v := range vals {
@@ -647,6 +673,7 @@ func PrintCLIDocs(usageWriter io.Writer, app *kingpin.Application) {
 		"FormatThreeColMarkdownTable": formatThreeColMarkdownTable,
 		"FlagsToColumns":              flagsToColumns,
 		"ArgsToColumns":               argsToColumns,
+		"SortCommandsByName":          sortCommandsByName,
 	})
 	app.UsageTemplate(docsUsageTemplate)
 	app.Usage([]string{""})

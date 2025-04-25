@@ -251,7 +251,7 @@ func TestPrintCLIDocs(t *testing.T) {
 		expected string // The @ character is replaced with a backtick
 	}{
 		{
-			name: "subcommands flags and global flags",
+			name: "subcommand flags and global flags",
 			makeApp: func() *kingpin.Application {
 				app := InitCLIParser("myapp", "This is the main CLI tool.")
 				app.Flag("config", "The location of the config file").Default("config.yaml").String()
@@ -280,7 +280,17 @@ Global flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|@--config@|config.yaml|The location of the config file|
+|@--config@|@config.yaml@|The location of the config file|
+
+## myapp hello
+
+Hello.
+
+Usage:
+
+@@@code
+$ myapp hello
+@@@
 
 ## myapp help
 
@@ -297,16 +307,6 @@ Arguments:
 |Argument|Default|Description|
 |---|---|---|
 |command|none (optional)|Show help on command.|
-
-## myapp hello
-
-Hello.
-
-Usage:
-
-@@@code
-$ myapp hello
-@@@
 
 ## myapp create rocket
 
@@ -352,9 +352,9 @@ Global flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|@--config@|config.yaml|The location of the config file|
-|@--verbosity@|3|Verbosity level.|
-|@--[no-]dry-run@|false|Whether to use dry-run mode|
+|@--config@|@config.yaml@|The location of the config file|
+|@--verbosity@|@3@|Verbosity level.|
+|@--[no-]dry-run@|@false@|Whether to use dry-run mode|
 
 `,
 		},
@@ -386,8 +386,24 @@ Global flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|@--config@|config.yaml|The location of the config file|
+|@--config@|@config.yaml@|The location of the config file|
 
+## myapp create
+
+Create a resource.
+
+Usage:
+
+@@@code
+$ myapp create [<flags>]
+@@@
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--verbosity@|@3@|Verbosity level.|
+|@--[no-]dry-run@|@false@|Whether to use dry-run mode|
 ## myapp help
 
 Show help.
@@ -404,22 +420,6 @@ Arguments:
 |---|---|---|
 |command|none (optional)|Show help on command.|
 
-## myapp create
-
-Create a resource.
-
-Usage:
-
-@@@code
-$ myapp create [<flags>]
-@@@
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|@--verbosity@|3|Verbosity level.|
-|@--[no-]dry-run@|false|Whether to use dry-run mode|
 `,
 		},
 		{
@@ -450,7 +450,24 @@ Global flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|@--config@|config.yaml|The location of the config file|
+|@--config@|@config.yaml@|The location of the config file|
+
+## myapp create
+
+Create.
+
+Usage:
+
+@@@code
+$ myapp create [<verbosity>] [<dry-run>]
+@@@
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|verbosity|@3@ (optional)|Verbosity level.|
+|dry-run|@false@ (optional)|Whether to use dry-run mode|
 
 ## myapp help
 
@@ -467,23 +484,6 @@ Arguments:
 |Argument|Default|Description|
 |---|---|---|
 |command|none (optional)|Show help on command.|
-
-## myapp create
-
-Create.
-
-Usage:
-
-@@@code
-$ myapp create [<verbosity>] [<dry-run>]
-@@@
-
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|verbosity|3 (optional)|Verbosity level.|
-|dry-run|false (optional)|Whether to use dry-run mode|
 
 `,
 		},
@@ -515,7 +515,7 @@ Global flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|@--config@|config.yaml|The location of the config file|
+|@--config@|@config.yaml@|The location of the config file|
 
 ## myapp connect
 
@@ -555,7 +555,7 @@ Arguments:
 
 ## myapp validate
 
-Validate validate config.
+Validate the config.
 
 Usage:
 
