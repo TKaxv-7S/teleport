@@ -51,6 +51,7 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |`-f`, `--format`|none|Optional print format, one of: "uri" to print app address, "ca" to print CA cert path, "cert" to print cert path, "key" print key path, "curl" to print example curl command, "json" or "yaml" to print everything as JSON or YAML.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -76,6 +77,7 @@ Flags:
 |    `--gcp-service-account`|none|(For GCP CLI access only) GCP service account name.|
 |    `--target-port`|none|Port to which connections made using this cert should be routed to. Valid only for multi-port TCP apps.|
 |`-q`, `--[no-]quiet`|none|Quiet mode|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -117,6 +119,7 @@ Flags:
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |`-R`, `--[no-]all`|none|List apps from all clusters and proxies.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -140,6 +143,7 @@ Flags:
 |    `--app`|none|Optional Name of the AWS application to use if logged into multiple.|
 |    `--exec`|none|Execute different commands (e.g. terraform) under Teleport credentials|
 |    `--aws-role`|none|(For AWS CLI access only) Amazon IAM role ARN or role name.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -162,6 +166,7 @@ Flags:
 |---|---|---|
 |`--app`|none|Optional name of the Azure application to use if logged into multiple.|
 |`--azure-identity`|none|(For Azure CLI access only) Azure managed identity name.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -185,6 +190,7 @@ Flags:
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |`-q`, `--[no-]quiet`|none|Quiet mode|
 |`-v`, `--[no-]verbose`|none|Verbose table output, shows full label output|
+
 ## tsh config
 
 Print OpenSSH configuration details.
@@ -200,6 +206,7 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |`-p`, `--port`|none|SSH port on a remote host|
+
 ## tsh db config
 
 Print database connection information. Useful when configuring GUI clients.
@@ -217,6 +224,7 @@ Flags:
 |    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
 |`-f`, `--format`|none|Print format: "text" to print in table format (default), "cmd" to print connect command, "json" or "yaml" to print in JSON or YAML.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -244,6 +252,7 @@ Flags:
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
 |    `--request-reason`|none|Reason for requesting access|
 |    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -267,6 +276,7 @@ Flags:
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -294,6 +304,7 @@ Flags:
 |`-r`, `--db-roles`|none|List of comma separate database roles to use for auto-provisioned user.|
 |    `--request-reason`|none|Reason for requesting access|
 |    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -316,6 +327,7 @@ Flags:
 |---|---|---|
 |`--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
 |`--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -341,6 +353,7 @@ Flags:
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |`-R`, `--[no-]all`|none|List databases from all clusters and proxies.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -363,6 +376,7 @@ Flags:
 |---|---|---|
 |`--[no-]current-device`|none|Attempts to register and enroll the current device. Requires device admin privileges.|
 |`--token`|none|Device enrollment token|
+
 ## tsh env
 
 Print commands to set Teleport session environment variables.
@@ -379,6 +393,7 @@ Flags:
 |---|---|---|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |    `--[no-]unset`|none|Print commands to clear Teleport session environment variables|
+
 ## tsh gcloud
 
 Access GCP API with the gcloud command.
@@ -395,6 +410,7 @@ Flags:
 |---|---|---|
 |`--app`|none|Optional name of the GCP application to use if logged into multiple.|
 |`--gcp-service-account`|none|(For GCP CLI access only) GCP service account name.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -451,6 +467,7 @@ Flags:
 |---|---|---|
 |`--github-org`|none|GitHub organization|
 |`--[no-]force`|none|Force a login|
+
 ## tsh git ls
 
 List Git servers.
@@ -468,6 +485,7 @@ Flags:
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -490,6 +508,7 @@ Flags:
 |---|---|---|
 |`--app`|none|Optional name of the GCP application to use if logged into multiple.|
 |`--gcp-service-account`|none|(For GCP CLI access only) GCP service account name.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -511,6 +530,7 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |`--[no-]skip-confirm`|none|Skip confirmation and prompt for MFA immediately|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -549,6 +569,7 @@ Flags:
 |---|---|---|
 |`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
 |`-m`, `--mode`|`observer`|Mode of joining the session, valid modes are observer, moderator and peer.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -578,6 +599,7 @@ Flags:
 |    `--reason`|none|The purpose of the session.|
 |    `--invite`|none|A comma separated list of people to mark as invited for the session.|
 |    `--[no-]participant-req`|none|Displays a verbose list of required participants in a moderated session.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -601,6 +623,7 @@ Flags:
 |---|---|---|
 |`-m`, `--mode`|`observer`|Mode of joining the session, valid modes are observer, moderator and peer.|
 |`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -631,6 +654,7 @@ Flags:
 |    `--set-context-name`|`{{.ClusterName}}-{{.KubeName}}`|Define a custom context name. To use it with --all include "\{\{.KubeName\}\}"|
 |    `--request-reason`|none|Reason for requesting access|
 |    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -658,6 +682,7 @@ Flags:
 |`-R`, `--[no-]all`|none|List Kubernetes clusters from all clusters and proxies.|
 |`-v`, `--[no-]verbose`|none|Show an untruncated list of labels.|
 |`-q`, `--[no-]quiet`|none|Quiet mode.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -681,6 +706,7 @@ Flags:
 |---|---|---|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+
 ## tsh kubectl
 
 Runs a kubectl command on a Kubernetes cluster.
@@ -713,6 +739,7 @@ Flags:
 |---|---|---|
 |`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
 |    `--[no-]no-resume`|none|Disable SSH connection resumption|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -744,6 +771,7 @@ Flags:
 |    `--browser`|none|Set to 'none' to suppress browser opening on login|
 |    `--kube-cluster`|none|Name of the Kubernetes cluster to login to|
 |`-v`, `--[no-]verbose`|none|Show extra status information|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -780,6 +808,7 @@ Flags:
 |    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
 |`-R`, `--[no-]all`|none|List nodes from all clusters and proxies.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -802,6 +831,7 @@ Flags:
 |---|---|---|
 |`--name`|none|Name of the new MFA device|
 |`--type`|none|Type of the new MFA device (TOTP, WEBAUTHN)|
+
 ## tsh mfa ls
 
 Get a list of registered MFA devices.
@@ -818,6 +848,7 @@ Flags:
 |---|---|---|
 |`-v`, `--[no-]verbose`|none|Print more information about MFA devices|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
+
 ## tsh mfa rm
 
 Remove a MFA device.
@@ -852,6 +883,7 @@ Flags:
 |    `--speed`|`1x`|Playback speed, applicable when streaming SSH or Kubernetes sessions.|
 |    `--[no-]skip-idle-time`|none|Quickly skip over idle time, applicable when streaming SSH or Kubernetes sessions.|
 |`-f`, `--format`|`pty`|Format output (pty, json, yaml, text)|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -875,6 +907,7 @@ Flags:
 |---|---|---|
 |`-p`, `--port`|none|Specifies the listening port used by by the proxy app listener. Accepts an optional target port of a multi-port TCP app after a colon, e.g. "1234:5678"|
 |`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -898,6 +931,7 @@ Flags:
 |    `--app`|none|Optional Name of the AWS application to use if logged into multiple.|
 |`-p`, `--port`|none|Specifies the source port used by the proxy listener.|
 |`-f`, `--format`|`unix`|Optional format to print the commands for setting environment variables, one of: unix, command-prompt, powershell, text. Default is unix. Or specify a service format, one of: athena-odbc, athena-jdbc|
+
 ## tsh proxy azure
 
 Start local proxy for Azure access.
@@ -915,6 +949,7 @@ Flags:
 |    `--app`|none|Optional Name of the Azure application to use if logged into multiple.|
 |`-p`, `--port`|none|Specifies the source port used by the proxy listener.|
 |`-f`, `--format`|`unix`|Optional format to print the commands for setting environment variables, one of: unix, command-prompt, powershell, text. Default is unix.|
+
 ## tsh proxy db
 
 Start local TLS proxy for database connections when using Teleport in
@@ -940,6 +975,7 @@ Flags:
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
 |    `--request-reason`|none|Reason for requesting access|
 |    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -963,6 +999,7 @@ Flags:
 |    `--app`|none|Optional Name of the GCP application to use if logged into multiple.|
 |`-p`, `--port`|none|Specifies the source port used by the proxy listener.|
 |`-f`, `--format`|`unix`|Optional format to print the commands for setting environment variables, one of: unix, command-prompt, powershell, text. Default is unix.|
+
 ## tsh proxy kube
 
 Start local proxy for Kubernetes access.
@@ -987,6 +1024,7 @@ Flags:
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
 |    `--set-context-name`|`{{.ClusterName}}-{{.KubeName}}`|Define a custom context name or template.|
 |    `--[no-]exec`|none|Run the proxy in the background and reexec into a new shell with $KUBECONFIG already pointed to our config file.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1011,6 +1049,7 @@ Flags:
 |`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
 |    `--[no-]no-resume`|none|Disable SSH connection resumption|
 |    `--[no-]relogin`|`true`|Permit performing an authentication attempt on a failed command|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1032,6 +1071,7 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |`--out`|none|Override output file name|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1057,6 +1097,7 @@ Flags:
 |    `--to-utc`|none|End of time range in which recordings are listed. Format 2006-01-02. Defaults to current time.|
 |    `--limit`|`50`|Maximum number of recordings to show. Default 50.|
 |    `--last`|none|Duration into the past from which session recordings should be listed. Format 5h30m40s|
+
 ## tsh request create
 
 Create a new access request.
@@ -1080,6 +1121,7 @@ Flags:
 |`--session-ttl`|none|Expiration time for the elevated certificate|
 |`--max-duration`|none|How long the access should be granted for|
 |`--assume-start-time`|none|Sets time roles can be assumed by requestor (RFC3339 e.g 2023-12-12T23:20:50.52Z)|
+
 ## tsh request drop
 
 Drop one more access requests from current identity.
@@ -1114,6 +1156,7 @@ Flags:
 |    `--[no-]reviewable`|none|Only show requests reviewable by current user|
 |    `--[no-]suggested`|none|Only show requests that suggest current user as reviewer|
 |    `--[no-]my-requests`|none|Only show requests created by current user|
+
 ## tsh request review
 
 Review an access request.
@@ -1132,6 +1175,7 @@ Flags:
 |`--[no-]deny`|none|Review proposes denial|
 |`--reason`|none|Review reason message|
 |`--assume-start-time`|none|Sets time roles can be assumed by requestor (RFC3339 e.g 2023-12-12T23:20:50.52Z)|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1160,6 +1204,7 @@ Flags:
 |    `--namespace`|`default`|Kubernetes Namespace to search for Pods|
 |    `--[no-]all-kube-namespaces`|none|Search Pods in every namespace|
 |`-v`, `--[no-]verbose`|none|Verbose table output, shows full label output|
+
 ## tsh request show
 
 Show request details.
@@ -1175,6 +1220,7 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1197,6 +1243,7 @@ Flags:
 |---|---|---|
 |`-q`, `--[no-]quiet`|none|Quiet mode|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1219,6 +1266,7 @@ Flags:
 |---|---|---|
 |`--dirs`|`/Users/`|Directories to scan.|
 |`--skip-paths`|none|Paths to directories or files to skip. Supports for matching patterns.|
+
 ## tsh scp
 
 Transfer files to a remote SSH node.
@@ -1240,6 +1288,7 @@ Flags:
 |`-q`, `--[no-]quiet`|none|Quiet mode|
 |    `--[no-]no-resume`|none|Disable SSH connection resumption|
 |    `--[no-]relogin`|`true`|Permit performing an authentication attempt on a failed command|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1262,6 +1311,7 @@ Flags:
 |---|---|---|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |    `--kind`|`ssh`,`k8s`,`db`,`app`,`desktop`|Filter by session kind(s)|
+
 ## tsh ssh
 
 Run shell or execute a command on a remote SSH node.
@@ -1298,6 +1348,7 @@ Flags:
 |    `--log-dir`|none|Directory to log separated command output, when executing on multiple nodes. If set, output from each node will also be labeled in the terminal.|
 |    `--[no-]no-resume`|none|Disable SSH connection resumption|
 |    `--[no-]relogin`|`true`|Permit performing an authentication attempt on a failed command|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1321,6 +1372,7 @@ Flags:
 |---|---|---|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |`-v`, `--[no-]verbose`|none|Show extra status information after successful login|
+
 ## tsh svid issue
 
 Issue a SPIFFE SVID using Teleport Workload Identity and write it to a local
@@ -1341,6 +1393,7 @@ Flags:
 |`--dns-san`|none|DNS SANs to include in the SVID. By default, none are included.|
 |`--ip-san`|none|IP SANs to include in the SVID. By default, none are included.|
 |`--svid-ttl`|`1h`|Sets the time to live for the SVID.|
+
 Arguments:
 
 |Argument|Default|Description|
@@ -1363,6 +1416,7 @@ Flags:
 |---|---|---|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
 |    `--[no-]client`|none|Show the client version only (no server required).|
+
 ## tsh vnet
 
 Start Teleport VNet, a virtual network for TCP application access.
@@ -1377,6 +1431,7 @@ Flags:
 
 |Flag|Default|Description|
 |---|---|---|
+
 ## tsh workload-identity issue-x509
 
 Use Teleport Workload Identity to issue an X509 credential write it to a local
@@ -1396,3 +1451,4 @@ Flags:
 |`--label-selector`|none|A label-based selector for which workload identities to issue. Multiple labels can be provided using ','.|
 |`--credential-ttl`|`1h`|Sets the time to live for the credential.|
 |`--output`|none|Path to the directory to write the SVID into.|
+
