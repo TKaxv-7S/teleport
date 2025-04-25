@@ -36,102 +36,92 @@ Global flags:
 |    `--piv-slot`|none|Specify a PIV slot key to use for Hardware Key support instead of the default. Ex: "9d"|
 |`-J`, `--jumphost`|none|SSH jumphost|
 
-## tsh help
+## tsh apps config
 
-Show help.
+Print app connection information.
 
 Usage:
 
 ```code
-$ tsh help [<command>...]
+$ tsh apps config [<flags>] [<app>]
 ```
 
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|none|Optional print format, one of: "uri" to print app address, "ca" to print CA cert path, "cert" to print cert path, "key" print key path, "curl" to print example curl command, "json" or "yaml" to print everything as JSON or YAML.|
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
-|command|none (optional)|Show help on command.|
+|app|none (optional)|App to print information for. Required when logged into multiple apps.|
 
-## tsh version
+## tsh apps login
 
-Print the tsh client and Proxy server versions for the current context.
+Retrieve short-lived certificate for an app.
 
 Usage:
 
 ```code
-$ tsh version [<flags>]
+$ tsh apps login [<flags>] <app>
 ```
 
 Flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|    `--[no-]client`|none|Show the client version only (no server required).|
-## tsh ssh
-
-Run shell or execute a command on a remote SSH node.
-
-Usage:
-
-```code
-$ tsh ssh [<flags>] [<[user@]host>] [<command>...]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-p`, `--port`|none|SSH port on a remote host|
-|`-A`, `--[no-]forward-agent`|none|Forward agent to target node|
-|`-L`, `--forward`|none|Forward localhost connections to remote server|
-|`-D`, `--dynamic-forward`|none|Forward localhost connections to remote server using SOCKS5|
-|`-R`, `--remote-forward`|none|Forward remote connections to localhost|
-|    `--[no-]local`|`false`|Execute command on localhost after connecting to SSH node|
-|`-t`, `--[no-]tty`|none|Allocate TTY|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|`-o`, `--option`|none|OpenSSH options in the format used in the configuration file|
-|`-N`, `--[no-]no-remote-exec`|none|Don't execute remote command, useful for port forwarding|
-|`-X`, `--[no-]x11-untrusted`|none|Requests untrusted (secure) X11 forwarding for this session|
-|`-Y`, `--[no-]x11-trusted`|none|Requests trusted (insecure) X11 forwarding for this session. This can make your local machine vulnerable to attacks, use with caution|
-|    `--x11-untrusted-timeout`|`10m`|Sets a timeout for untrusted X11 forwarding, after which the client will reject any forwarding requests from the server|
-|    `--invite`|none|A comma separated list of people to mark as invited for the session.|
-|    `--reason`|none|The purpose of the session.|
-|    `--[no-]participant-req`|none|Displays a verbose list of required participants in a moderated session.|
-|    `--request-reason`|none|Reason for requesting access|
-|    `--request-mode`|`resource`|Type of automatic access request to make (off, resource, role)|
-|    `--[no-]disable-access-request`|none|Disable automatic resource access requests (DEPRECATED: use --request-mode=off)|
-|    `--log-dir`|none|Directory to log separated command output, when executing on multiple nodes. If set, output from each node will also be labeled in the terminal.|
-|    `--[no-]no-resume`|none|Disable SSH connection resumption|
-|    `--[no-]relogin`|`true`|Permit performing an authentication attempt on a failed command|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|[user@]host|none (optional)|Remote hostname and the login to use, this argument is required|
-|command|none (optional)|Command to execute on a remote host|
-
-## tsh resolve
-
-Resolves an SSH host.
-
-Usage:
-
-```code
-$ tsh resolve [<flags>] <host>
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
+|    `--aws-role`|none|(For AWS CLI access only) Amazon IAM role ARN or role name.|
+|    `--azure-identity`|none|(For Azure CLI access only) Azure managed identity name.|
+|    `--gcp-service-account`|none|(For GCP CLI access only) GCP service account name.|
+|    `--target-port`|none|Port to which connections made using this cert should be routed to. Valid only for multi-port TCP apps.|
 |`-q`, `--[no-]quiet`|none|Quiet mode|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
-|host|none (required)|Remote hostname to resolve|
+|app|none (required)|App name to retrieve credentials for. Can be obtained from `tsh apps ls` output.|
+
+## tsh apps logout
+
+Remove app certificate.
+
+Usage:
+
+```code
+$ tsh apps logout [<app>]
+```
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|app|none (optional)|App to remove credentials for.|
+
+## tsh apps ls
+
+List available applications.
+
+Usage:
+
+```code
+$ tsh apps ls [<flags>] [<labels>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-v`, `--[no-]verbose`|none|Show extra application fields.|
+|    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|`-R`, `--[no-]all`|none|List apps from all clusters and proxies.|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
 
 ## tsh aws
 
@@ -178,6 +168,217 @@ Arguments:
 |---|---|---|
 |command|none (optional)|`az` command and subcommands arguments that are going to be forwarded to Azure CLI.|
 
+## tsh clusters
+
+List available Teleport clusters.
+
+Usage:
+
+```code
+$ tsh clusters [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|`-q`, `--[no-]quiet`|none|Quiet mode|
+|`-v`, `--[no-]verbose`|none|Verbose table output, shows full label output|
+## tsh config
+
+Print OpenSSH configuration details.
+
+Usage:
+
+```code
+$ tsh config [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-p`, `--port`|none|SSH port on a remote host|
+## tsh db config
+
+Print database connection information. Useful when configuring GUI clients.
+
+Usage:
+
+```code
+$ tsh db config [<flags>] [<db>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+|`-f`, `--format`|none|Print format: "text" to print in table format (default), "cmd" to print connect command, "json" or "yaml" to print in JSON or YAML.|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|db|none (optional)|Print information for the specified database.|
+
+## tsh db connect
+
+Connect to a database.
+
+Usage:
+
+```code
+$ tsh db connect [<flags>] [<db>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-u`, `--db-user`|none|Database user to log in as.|
+|`-n`, `--db-name`|none|Database name to log in to.|
+|`-r`, `--db-roles`|none|List of comma separate database roles to use for auto-provisioned user.|
+|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+|    `--request-reason`|none|Reason for requesting access|
+|    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|db|none (optional)|Database service name to connect to.|
+
+## tsh db env
+
+Print environment variables for the configured database.
+
+Usage:
+
+```code
+$ tsh db env [<flags>] [<db>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|db|none (optional)|Print environment for the specified database|
+
+## tsh db login
+
+Retrieve credentials for a database.
+
+Usage:
+
+```code
+$ tsh db login [<flags>] [<db>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+|`-u`, `--db-user`|none|Database user to configure as default.|
+|`-n`, `--db-name`|none|Database name to configure as default.|
+|`-r`, `--db-roles`|none|List of comma separate database roles to use for auto-provisioned user.|
+|    `--request-reason`|none|Reason for requesting access|
+|    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|db|none (optional)|Database to retrieve credentials for. Can be obtained from 'tsh db ls' output.|
+
+## tsh db logout
+
+Remove database credentials.
+
+Usage:
+
+```code
+$ tsh db logout [<flags>] [<db>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+|`--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|db|none (optional)|Database to remove credentials for.|
+
+## tsh db ls
+
+List all available databases.
+
+Usage:
+
+```code
+$ tsh db ls [<flags>] [<labels>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-v`, `--[no-]verbose`|none|Show extra database fields.|
+|    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|`-R`, `--[no-]all`|none|List databases from all clusters and proxies.|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+
+## tsh device enroll
+
+Enroll this device as a trusted device. Requires Teleport Enterprise.
+
+Usage:
+
+```code
+$ tsh device enroll [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`--[no-]current-device`|none|Attempts to register and enroll the current device. Requires device admin privileges.|
+|`--token`|none|Device enrollment token|
+## tsh env
+
+Print commands to set Teleport session environment variables.
+
+Usage:
+
+```code
+$ tsh env [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|    `--[no-]unset`|none|Print commands to clear Teleport session environment variables|
 ## tsh gcloud
 
 Access GCP API with the gcloud command.
@@ -199,6 +400,79 @@ Arguments:
 |Argument|Default|Description|
 |---|---|---|
 |command|none (optional)|`gcloud` command and subcommands arguments.|
+
+## tsh git clone
+
+Clone a Git repository.
+
+Usage:
+
+```code
+$ tsh git clone <repository> [<directory>]
+```
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|repository|none (required)|Git URL of the repository to clone.|
+|directory|none (optional)|The name of a new directory to clone into.|
+
+## tsh git config
+
+Check Teleport config on the working Git directory. Or provide an action
+('update' or 'reset') to configure the Git repo.
+
+Usage:
+
+```code
+$ tsh git config [<action>]
+```
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|action|none (optional)|Optional action to perform. 'update' to configure the Git repo to proxy Git commands through Teleport. 'reset' to clear Teleport configuration from the Git repo.|
+
+## tsh git login
+
+Opens a browser and retrieves your login from GitHub.
+
+Usage:
+
+```code
+$ tsh git login --github-org=GITHUB-ORG [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`--github-org`|none|GitHub organization|
+|`--[no-]force`|none|Force a login|
+## tsh git ls
+
+List Git servers.
+
+Usage:
+
+```code
+$ tsh git ls [<flags>] [<labels>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
 
 ## tsh gsutil
 
@@ -222,142 +496,215 @@ Arguments:
 |---|---|---|
 |command|none (optional)|`gsutil` command and subcommands arguments.|
 
-## tsh apps ls
+## tsh headless approve
 
-List available applications.
+Approve a headless authentication request.
 
 Usage:
 
 ```code
-$ tsh apps ls [<flags>] [<labels>]
+$ tsh headless approve [<flags>] [<request id>]
 ```
 
 Flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|`-v`, `--[no-]verbose`|none|Show extra application fields.|
+|`--[no-]skip-confirm`|none|Skip confirmation and prompt for MFA immediately|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|request id|none (optional)|Headless authentication request ID|
+
+## tsh help
+
+Show help.
+
+Usage:
+
+```code
+$ tsh help [<command>...]
+```
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
+
+## tsh join
+
+Join the active SSH or Kubernetes session.
+
+Usage:
+
+```code
+$ tsh join [<flags>] <session-id>
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+|`-m`, `--mode`|`observer`|Mode of joining the session, valid modes are observer, moderator and peer.|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|session-id|none (required)|ID of the session to join|
+
+## tsh kube exec
+
+Execute a command in a Kubernetes pod.
+
+Usage:
+
+```code
+$ tsh kube exec [<flags>] <target> <command>...
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-c`, `--container`|none|Container name. If omitted, use the kubectl.kubernetes.io/default-container annotation for selecting the container to be attached or the first container in the pod will be chosen|
+|`-n`, `--namespace`|none|Configure the default Kubernetes namespace.|
+|`-f`, `--filename`|none|to use to exec into the resource|
+|`-q`, `--[no-]quiet`|none|Only print output from the remote session|
+|`-s`, `--[no-]stdin`|none|Pass stdin to the container|
+|`-t`, `--[no-]tty`|none|Stdin is a TTY|
+|    `--reason`|none|The purpose of the session.|
+|    `--invite`|none|A comma separated list of people to mark as invited for the session.|
+|    `--[no-]participant-req`|none|Displays a verbose list of required participants in a moderated session.|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|target|none (required)|Pod or deployment name|
+|command|none (required)|Command to execute in the container|
+
+## tsh kube join
+
+Join an active Kubernetes session.
+
+Usage:
+
+```code
+$ tsh kube join [<flags>] <session>
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-m`, `--mode`|`observer`|Mode of joining the session, valid modes are observer, moderator and peer.|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|session|none (required)|The ID of the target session.|
+
+## tsh kube login
+
+Login to a Kubernetes cluster.
+
+Usage:
+
+```code
+$ tsh kube login [<flags>] [<kube-cluster>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+|    `--as`|none|Configure custom Kubernetes user impersonation.|
+|    `--as-groups`|none|Configure custom Kubernetes group impersonation.|
+|`-n`, `--namespace`|none|Configure the default Kubernetes namespace.|
+|    `--[no-]all`|none|Generate a kubeconfig with every cluster the user has access to. Mutually exclusive with --labels or --query.|
+|    `--set-context-name`|`{{.ClusterName}}-{{.KubeName}}`|Define a custom context name. To use it with --all include "\{\{.KubeName\}\}"|
+|    `--request-reason`|none|Reason for requesting access|
+|    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|kube-cluster|none (optional)|Name of the Kubernetes cluster to login to. Check 'tsh kube ls' for a list of available clusters.|
+
+## tsh kube ls
+
+Get a list of Kubernetes clusters.
+
+Usage:
+
+```code
+$ tsh kube ls [<flags>] [<labels>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
 |    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
 |    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|`-R`, `--[no-]all`|none|List apps from all clusters and proxies.|
+|`-R`, `--[no-]all`|none|List Kubernetes clusters from all clusters and proxies.|
+|`-v`, `--[no-]verbose`|none|Show an untruncated list of labels.|
+|`-q`, `--[no-]quiet`|none|Quiet mode.|
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
 |labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
 
-## tsh apps login
+## tsh kube sessions
 
-Retrieve short-lived certificate for an app.
+Get a list of active Kubernetes sessions. (DEPRECATED: use tsh sessions ls
+--kind=kube instead)
 
 Usage:
 
 ```code
-$ tsh apps login [<flags>] <app>
+$ tsh kube sessions [<flags>]
 ```
 
 Flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|    `--aws-role`|none|(For AWS CLI access only) Amazon IAM role ARN or role name.|
-|    `--azure-identity`|none|(For Azure CLI access only) Azure managed identity name.|
-|    `--gcp-service-account`|none|(For GCP CLI access only) GCP service account name.|
-|    `--target-port`|none|Port to which connections made using this cert should be routed to. Valid only for multi-port TCP apps.|
-|`-q`, `--[no-]quiet`|none|Quiet mode|
-Arguments:
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+## tsh kubectl
 
-|Argument|Default|Description|
-|---|---|---|
-|app|none (required)|App name to retrieve credentials for. Can be obtained from `tsh apps ls` output.|
-
-## tsh apps logout
-
-Remove app certificate.
+Runs a kubectl command on a Kubernetes cluster.
 
 Usage:
 
 ```code
-$ tsh apps logout [<app>]
+$ tsh kubectl [<>...]
 ```
 
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
-|app|none (optional)|App to remove credentials for.|
+||none (optional)||
 
-## tsh apps config
+## tsh latency ssh
 
-Print app connection information.
-
-Usage:
-
-```code
-$ tsh apps config [<flags>] [<app>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|none|Optional print format, one of: "uri" to print app address, "ca" to print CA cert path, "cert" to print cert path, "key" print key path, "curl" to print example curl command, "json" or "yaml" to print everything as JSON or YAML.|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|app|none (optional)|App to print information for. Required when logged into multiple apps.|
-
-## tsh recordings ls
-
-List recorded sessions.
+Measure latency to a particular SSH host.
 
 Usage:
 
 ```code
-$ tsh recordings ls [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml). Defaults to 'text'.|
-|    `--from-utc`|none|Start of time range in which recordings are listed. Format 2006-01-02. Defaults to 24 hours ago.|
-|    `--to-utc`|none|End of time range in which recordings are listed. Format 2006-01-02. Defaults to current time.|
-|    `--limit`|`50`|Maximum number of recordings to show. Default 50.|
-|    `--last`|none|Duration into the past from which session recordings should be listed. Format 5h30m40s|
-## tsh recordings export
-
-Export recorded desktop sessions to video.
-
-Usage:
-
-```code
-$ tsh recordings export [<flags>] <session-id>
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`--out`|none|Override output file name|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|session-id|none (required)|ID of the session to export|
-
-## tsh proxy ssh
-
-Start local TLS proxy for ssh connections when using Teleport in single-port
-mode.
-
-Usage:
-
-```code
-$ tsh proxy ssh [<flags>] <[user@]host>
+$ tsh latency ssh [<flags>] <[user@]host>
 ```
 
 Flags:
@@ -366,43 +713,150 @@ Flags:
 |---|---|---|
 |`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
 |    `--[no-]no-resume`|none|Disable SSH connection resumption|
-|    `--[no-]relogin`|`true`|Permit performing an authentication attempt on a failed command|
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
 |[user@]host|none (required)|Remote hostname and the login to use|
 
-## tsh proxy db
+## tsh login
 
-Start local TLS proxy for database connections when using Teleport in
-single-port mode.
+Log in to a cluster and retrieve the session certificate.
 
 Usage:
 
 ```code
-$ tsh proxy db [<flags>] [<db>]
+$ tsh login [<flags>] [<cluster>]
 ```
 
 Flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|`-p`, `--port`|none|Specifies the source port used by proxy db listener|
-|    `--[no-]tunnel`|none|Open authenticated tunnel using database's client certificate so clients don't need to authenticate|
-|`-u`, `--db-user`|none|Database user to log in as.|
-|`-n`, `--db-name`|none|Database name to log in to.|
-|`-r`, `--db-roles`|none|List of comma separate database roles to use for auto-provisioned user.|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-|    `--request-reason`|none|Reason for requesting access|
-|    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+|`-o`, `--out`|none|Identity output|
+|`-f`, `--format`|`file`|Identity format: file, openssh (for OpenSSH compatibility) or kubernetes (for kubeconfig)|
+|    `--[no-]overwrite`|none|Whether to overwrite the existing identity file.|
+|    `--request-roles`|none|Request one or more extra roles|
+|    `--request-reason`|none|Reason for requesting additional roles|
+|    `--request-reviewers`|none|Suggested reviewers for role request|
+|    `--[no-]request-nowait`|none|Finish without waiting for request resolution|
+|    `--request-id`|none|Login with the roles requested in the given request|
+|    `--browser`|none|Set to 'none' to suppress browser opening on login|
+|    `--kube-cluster`|none|Name of the Kubernetes cluster to login to|
+|`-v`, `--[no-]verbose`|none|Show extra status information|
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
-|db|none (optional)|The name of the database to start local proxy for|
+|cluster|none (optional)|Specify the Teleport cluster to connect|
+
+## tsh logout
+
+Delete a cluster certificate.
+
+Usage:
+
+```code
+$ tsh logout
+```
+
+## tsh ls
+
+List remote SSH nodes.
+
+Usage:
+
+```code
+$ tsh ls [<flags>] [<labels>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+|`-v`, `--[no-]verbose`|none|One-line output (for text format), including node UUIDs|
+|`-f`, `--format`|`text`|Format output (text, json, yaml, names)|
+|    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+|`-R`, `--[no-]all`|none|List nodes from all clusters and proxies.|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+
+## tsh mfa add
+
+Add a new MFA device.
+
+Usage:
+
+```code
+$ tsh mfa add [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`--name`|none|Name of the new MFA device|
+|`--type`|none|Type of the new MFA device (TOTP, WEBAUTHN)|
+## tsh mfa ls
+
+Get a list of registered MFA devices.
+
+Usage:
+
+```code
+$ tsh mfa ls [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-v`, `--[no-]verbose`|none|Print more information about MFA devices|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+## tsh mfa rm
+
+Remove a MFA device.
+
+Usage:
+
+```code
+$ tsh mfa rm <name>
+```
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|name|none (required)|Name or ID of the MFA device to remove|
+
+## tsh play
+
+Replay the recorded session (SSH, Kubernetes, App, DB).
+
+Usage:
+
+```code
+$ tsh play [<flags>] <session-id>
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+|    `--speed`|`1x`|Playback speed, applicable when streaming SSH or Kubernetes sessions.|
+|    `--[no-]skip-idle-time`|none|Quickly skip over idle time, applicable when streaming SSH or Kubernetes sessions.|
+|`-f`, `--format`|`pty`|Format output (pty, json, yaml, text)|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|session-id|none (required)|ID or path to session file to play|
 
 ## tsh proxy app
 
@@ -461,6 +915,37 @@ Flags:
 |    `--app`|none|Optional Name of the Azure application to use if logged into multiple.|
 |`-p`, `--port`|none|Specifies the source port used by the proxy listener.|
 |`-f`, `--format`|`unix`|Optional format to print the commands for setting environment variables, one of: unix, command-prompt, powershell, text. Default is unix.|
+## tsh proxy db
+
+Start local TLS proxy for database connections when using Teleport in
+single-port mode.
+
+Usage:
+
+```code
+$ tsh proxy db [<flags>] [<db>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-p`, `--port`|none|Specifies the source port used by proxy db listener|
+|    `--[no-]tunnel`|none|Open authenticated tunnel using database's client certificate so clients don't need to authenticate|
+|`-u`, `--db-user`|none|Database user to log in as.|
+|`-n`, `--db-name`|none|Database name to log in to.|
+|`-r`, `--db-roles`|none|List of comma separate database roles to use for auto-provisioned user.|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
+|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
+|    `--request-reason`|none|Reason for requesting access|
+|    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|db|none (optional)|The name of the database to start local proxy for|
+
 ## tsh proxy gcloud
 
 Start local proxy for GCP access.
@@ -508,161 +993,15 @@ Arguments:
 |---|---|---|
 |kube-cluster|none (optional)|Name of the Kubernetes cluster to proxy. Check 'tsh kube ls' for a list of available clusters. If not specified, all clusters previously logged in through `tsh kube login` will be used.|
 
-## tsh db ls
+## tsh proxy ssh
 
-List all available databases.
-
-Usage:
-
-```code
-$ tsh db ls [<flags>] [<labels>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-v`, `--[no-]verbose`|none|Show extra database fields.|
-|    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|`-R`, `--[no-]all`|none|List databases from all clusters and proxies.|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-
-## tsh db login
-
-Retrieve credentials for a database.
+Start local TLS proxy for ssh connections when using Teleport in single-port
+mode.
 
 Usage:
 
 ```code
-$ tsh db login [<flags>] [<db>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-|`-u`, `--db-user`|none|Database user to configure as default.|
-|`-n`, `--db-name`|none|Database name to configure as default.|
-|`-r`, `--db-roles`|none|List of comma separate database roles to use for auto-provisioned user.|
-|    `--request-reason`|none|Reason for requesting access|
-|    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|db|none (optional)|Database to retrieve credentials for. Can be obtained from 'tsh db ls' output.|
-
-## tsh db logout
-
-Remove database credentials.
-
-Usage:
-
-```code
-$ tsh db logout [<flags>] [<db>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-|`--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|db|none (optional)|Database to remove credentials for.|
-
-## tsh db env
-
-Print environment variables for the configured database.
-
-Usage:
-
-```code
-$ tsh db env [<flags>] [<db>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|db|none (optional)|Print environment for the specified database|
-
-## tsh db config
-
-Print database connection information. Useful when configuring GUI clients.
-
-Usage:
-
-```code
-$ tsh db config [<flags>] [<db>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-|`-f`, `--format`|none|Print format: "text" to print in table format (default), "cmd" to print connect command, "json" or "yaml" to print in JSON or YAML.|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|db|none (optional)|Print information for the specified database.|
-
-## tsh db connect
-
-Connect to a database.
-
-Usage:
-
-```code
-$ tsh db connect [<flags>] [<db>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-u`, `--db-user`|none|Database user to log in as.|
-|`-n`, `--db-name`|none|Database name to log in to.|
-|`-r`, `--db-roles`|none|List of comma separate database roles to use for auto-provisioned user.|
-|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-|    `--request-reason`|none|Reason for requesting access|
-|    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|db|none (optional)|Database service name to connect to.|
-
-## tsh join
-
-Join the active SSH or Kubernetes session.
-
-Usage:
-
-```code
-$ tsh join [<flags>] <session-id>
+$ tsh proxy ssh [<flags>] <[user@]host>
 ```
 
 Flags:
@@ -670,257 +1009,54 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|`-m`, `--mode`|`observer`|Mode of joining the session, valid modes are observer, moderator and peer.|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|session-id|none (required)|ID of the session to join|
-
-## tsh play
-
-Replay the recorded session (SSH, Kubernetes, App, DB).
-
-Usage:
-
-```code
-$ tsh play [<flags>] <session-id>
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|    `--speed`|`1x`|Playback speed, applicable when streaming SSH or Kubernetes sessions.|
-|    `--[no-]skip-idle-time`|none|Quickly skip over idle time, applicable when streaming SSH or Kubernetes sessions.|
-|`-f`, `--format`|`pty`|Format output (pty, json, yaml, text)|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|session-id|none (required)|ID or path to session file to play|
-
-## tsh scp
-
-Transfer files to a remote SSH node.
-
-Usage:
-
-```code
-$ tsh scp [<flags>] <from, to>...
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|`-r`, `--[no-]recursive`|none|Recursive copy of subdirectories|
-|`-P`, `--port`|none|Port to connect to on the remote host|
-|`-p`, `--[no-]preserve`|none|Preserves access and modification times from the original file|
-|`-q`, `--[no-]quiet`|none|Quiet mode|
 |    `--[no-]no-resume`|none|Disable SSH connection resumption|
 |    `--[no-]relogin`|`true`|Permit performing an authentication attempt on a failed command|
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
-|from, to|none (required)|Source and destination to copy, one must be a local path and one must be a remote path|
-
-## tsh ls
-
-List remote SSH nodes.
-
-Usage:
-
-```code
-$ tsh ls [<flags>] [<labels>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|`-v`, `--[no-]verbose`|none|One-line output (for text format), including node UUIDs|
-|`-f`, `--format`|`text`|Format output (text, json, yaml, names)|
-|    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-|`-R`, `--[no-]all`|none|List nodes from all clusters and proxies.|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-
-## tsh clusters
-
-List available Teleport clusters.
-
-Usage:
-
-```code
-$ tsh clusters [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|`-q`, `--[no-]quiet`|none|Quiet mode|
-|`-v`, `--[no-]verbose`|none|Verbose table output, shows full label output|
-## tsh sessions ls
-
-List active sessions.
-
-Usage:
-
-```code
-$ tsh sessions ls [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|    `--kind`|`ssh`,`k8s`,`db`,`app`,`desktop`|Filter by session kind(s)|
-## tsh login
-
-Log in to a cluster and retrieve the session certificate.
-
-Usage:
-
-```code
-$ tsh login [<flags>] [<cluster>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-o`, `--out`|none|Identity output|
-|`-f`, `--format`|`file`|Identity format: file, openssh (for OpenSSH compatibility) or kubernetes (for kubeconfig)|
-|    `--[no-]overwrite`|none|Whether to overwrite the existing identity file.|
-|    `--request-roles`|none|Request one or more extra roles|
-|    `--request-reason`|none|Reason for requesting additional roles|
-|    `--request-reviewers`|none|Suggested reviewers for role request|
-|    `--[no-]request-nowait`|none|Finish without waiting for request resolution|
-|    `--request-id`|none|Login with the roles requested in the given request|
-|    `--browser`|none|Set to 'none' to suppress browser opening on login|
-|    `--kube-cluster`|none|Name of the Kubernetes cluster to login to|
-|`-v`, `--[no-]verbose`|none|Show extra status information|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|cluster|none (optional)|Specify the Teleport cluster to connect|
-
-## tsh logout
-
-Delete a cluster certificate.
-
-Usage:
-
-```code
-$ tsh logout
-```
-
-## tsh latency ssh
-
-Measure latency to a particular SSH host.
-
-Usage:
-
-```code
-$ tsh latency ssh [<flags>] <[user@]host>
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|    `--[no-]no-resume`|none|Disable SSH connection resumption|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
 |[user@]host|none (required)|Remote hostname and the login to use|
 
-## tsh status
+## tsh recordings export
 
-Display the list of proxy servers and retrieved certificates.
+Export recorded desktop sessions to video.
 
 Usage:
 
 ```code
-$ tsh status [<flags>]
+$ tsh recordings export [<flags>] <session-id>
 ```
 
 Flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|`-v`, `--[no-]verbose`|none|Show extra status information after successful login|
-## tsh env
-
-Print commands to set Teleport session environment variables.
-
-Usage:
-
-```code
-$ tsh env [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|    `--[no-]unset`|none|Print commands to clear Teleport session environment variables|
-## tsh request ls
-
-List access requests.
-
-Usage:
-
-```code
-$ tsh request ls [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|    `--[no-]reviewable`|none|Only show requests reviewable by current user|
-|    `--[no-]suggested`|none|Only show requests that suggest current user as reviewer|
-|    `--[no-]my-requests`|none|Only show requests created by current user|
-## tsh request show
-
-Show request details.
-
-Usage:
-
-```code
-$ tsh request show [<flags>] <request-id>
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|`--out`|none|Override output file name|
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
-|request-id|none (required)|ID of the target request|
+|session-id|none (required)|ID of the session to export|
 
+## tsh recordings ls
+
+List recorded sessions.
+
+Usage:
+
+```code
+$ tsh recordings ls [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|`text`|Format output (text, json, yaml). Defaults to 'text'.|
+|    `--from-utc`|none|Start of time range in which recordings are listed. Format 2006-01-02. Defaults to 24 hours ago.|
+|    `--to-utc`|none|End of time range in which recordings are listed. Format 2006-01-02. Defaults to current time.|
+|    `--limit`|`50`|Maximum number of recordings to show. Default 50.|
+|    `--last`|none|Duration into the past from which session recordings should be listed. Format 5h30m40s|
 ## tsh request create
 
 Create a new access request.
@@ -944,6 +1080,40 @@ Flags:
 |`--session-ttl`|none|Expiration time for the elevated certificate|
 |`--max-duration`|none|How long the access should be granted for|
 |`--assume-start-time`|none|Sets time roles can be assumed by requestor (RFC3339 e.g 2023-12-12T23:20:50.52Z)|
+## tsh request drop
+
+Drop one more access requests from current identity.
+
+Usage:
+
+```code
+$ tsh request drop [<request-id>...]
+```
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|request-id|`*` (optional)|IDs of requests to drop (default drops all requests)|
+
+## tsh request ls
+
+List access requests.
+
+Usage:
+
+```code
+$ tsh request ls [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|    `--[no-]reviewable`|none|Only show requests reviewable by current user|
+|    `--[no-]suggested`|none|Only show requests that suggest current user as reviewer|
+|    `--[no-]my-requests`|none|Only show requests created by current user|
 ## tsh request review
 
 Review an access request.
@@ -990,125 +1160,14 @@ Flags:
 |    `--namespace`|`default`|Kubernetes Namespace to search for Pods|
 |    `--[no-]all-kube-namespaces`|none|Search Pods in every namespace|
 |`-v`, `--[no-]verbose`|none|Verbose table output, shows full label output|
-## tsh request drop
+## tsh request show
 
-Drop one more access requests from current identity.
-
-Usage:
-
-```code
-$ tsh request drop [<request-id>...]
-```
-
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|request-id|`*` (optional)|IDs of requests to drop (default drops all requests)|
-
-## tsh headless approve
-
-Approve a headless authentication request.
+Show request details.
 
 Usage:
 
 ```code
-$ tsh headless approve [<flags>] [<request id>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`--[no-]skip-confirm`|none|Skip confirmation and prompt for MFA immediately|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|request id|none (optional)|Headless authentication request ID|
-
-## tsh kubectl
-
-Runs a kubectl command on a Kubernetes cluster.
-
-Usage:
-
-```code
-$ tsh kubectl [<>...]
-```
-
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-||none (optional)||
-
-## tsh kube ls
-
-Get a list of Kubernetes clusters.
-
-Usage:
-
-```code
-$ tsh kube ls [<flags>] [<labels>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|`-R`, `--[no-]all`|none|List Kubernetes clusters from all clusters and proxies.|
-|`-v`, `--[no-]verbose`|none|Show an untruncated list of labels.|
-|`-q`, `--[no-]quiet`|none|Quiet mode.|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-
-## tsh kube login
-
-Login to a Kubernetes cluster.
-
-Usage:
-
-```code
-$ tsh kube login [<flags>] [<kube-cluster>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-|    `--labels`|none|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-|    `--as`|none|Configure custom Kubernetes user impersonation.|
-|    `--as-groups`|none|Configure custom Kubernetes group impersonation.|
-|`-n`, `--namespace`|none|Configure the default Kubernetes namespace.|
-|    `--[no-]all`|none|Generate a kubeconfig with every cluster the user has access to. Mutually exclusive with --labels or --query.|
-|    `--set-context-name`|`{{.ClusterName}}-{{.KubeName}}`|Define a custom context name. To use it with --all include "\{\{.KubeName\}\}"|
-|    `--request-reason`|none|Reason for requesting access|
-|    `--[no-]disable-access-request`|none|Disable automatic resource access requests|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|kube-cluster|none (optional)|Name of the Kubernetes cluster to login to. Check 'tsh kube ls' for a list of available clusters.|
-
-## tsh kube sessions
-
-Get a list of active Kubernetes sessions. (DEPRECATED: use tsh sessions ls
---kind=kube instead)
-
-Usage:
-
-```code
-$ tsh kube sessions [<flags>]
+$ tsh request show [<flags>] <request-id>
 ```
 
 Flags:
@@ -1116,106 +1175,33 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-## tsh kube exec
-
-Execute a command in a Kubernetes pod.
-
-Usage:
-
-```code
-$ tsh kube exec [<flags>] <target> <command>...
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-c`, `--container`|none|Container name. If omitted, use the kubectl.kubernetes.io/default-container annotation for selecting the container to be attached or the first container in the pod will be chosen|
-|`-n`, `--namespace`|none|Configure the default Kubernetes namespace.|
-|`-f`, `--filename`|none|to use to exec into the resource|
-|`-q`, `--[no-]quiet`|none|Only print output from the remote session|
-|`-s`, `--[no-]stdin`|none|Pass stdin to the container|
-|`-t`, `--[no-]tty`|none|Stdin is a TTY|
-|    `--reason`|none|The purpose of the session.|
-|    `--invite`|none|A comma separated list of people to mark as invited for the session.|
-|    `--[no-]participant-req`|none|Displays a verbose list of required participants in a moderated session.|
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
-|target|none (required)|Pod or deployment name|
-|command|none (required)|Command to execute in the container|
+|request-id|none (required)|ID of the target request|
 
-## tsh kube join
+## tsh resolve
 
-Join an active Kubernetes session.
+Resolves an SSH host.
 
 Usage:
 
 ```code
-$ tsh kube join [<flags>] <session>
+$ tsh resolve [<flags>] <host>
 ```
 
 Flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|`-m`, `--mode`|`observer`|Mode of joining the session, valid modes are observer, moderator and peer.|
-|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|session|none (required)|The ID of the target session.|
-
-## tsh mfa ls
-
-Get a list of registered MFA devices.
-
-Usage:
-
-```code
-$ tsh mfa ls [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-v`, `--[no-]verbose`|none|Print more information about MFA devices|
+|`-q`, `--[no-]quiet`|none|Quiet mode|
 |`-f`, `--format`|`text`|Format output (text, json, yaml)|
-## tsh mfa add
-
-Add a new MFA device.
-
-Usage:
-
-```code
-$ tsh mfa add [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`--name`|none|Name of the new MFA device|
-|`--type`|none|Type of the new MFA device (TOTP, WEBAUTHN)|
-## tsh mfa rm
-
-Remove a MFA device.
-
-Usage:
-
-```code
-$ tsh mfa rm <name>
-```
-
 Arguments:
 
 |Argument|Default|Description|
 |---|---|---|
-|name|none (required)|Name or ID of the MFA device to remove|
+|host|none (required)|Remote hostname to resolve|
 
 ## tsh scan keys
 
@@ -1233,14 +1219,57 @@ Flags:
 |---|---|---|
 |`--dirs`|`/Users/`|Directories to scan.|
 |`--skip-paths`|none|Paths to directories or files to skip. Supports for matching patterns.|
-## tsh config
+## tsh scp
 
-Print OpenSSH configuration details.
+Transfer files to a remote SSH node.
 
 Usage:
 
 ```code
-$ tsh config [<flags>]
+$ tsh scp [<flags>] <from, to>...
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+|`-r`, `--[no-]recursive`|none|Recursive copy of subdirectories|
+|`-P`, `--port`|none|Port to connect to on the remote host|
+|`-p`, `--[no-]preserve`|none|Preserves access and modification times from the original file|
+|`-q`, `--[no-]quiet`|none|Quiet mode|
+|    `--[no-]no-resume`|none|Disable SSH connection resumption|
+|    `--[no-]relogin`|`true`|Permit performing an authentication attempt on a failed command|
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|from, to|none (required)|Source and destination to copy, one must be a local path and one must be a remote path|
+
+## tsh sessions ls
+
+List active sessions.
+
+Usage:
+
+```code
+$ tsh sessions ls [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|    `--kind`|`ssh`,`k8s`,`db`,`app`,`desktop`|Filter by session kind(s)|
+## tsh ssh
+
+Run shell or execute a command on a remote SSH node.
+
+Usage:
+
+```code
+$ tsh ssh [<flags>] [<[user@]host>] [<command>...]
 ```
 
 Flags:
@@ -1248,22 +1277,50 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |`-p`, `--port`|none|SSH port on a remote host|
-## tsh device enroll
+|`-A`, `--[no-]forward-agent`|none|Forward agent to target node|
+|`-L`, `--forward`|none|Forward localhost connections to remote server|
+|`-D`, `--dynamic-forward`|none|Forward localhost connections to remote server using SOCKS5|
+|`-R`, `--remote-forward`|none|Forward remote connections to localhost|
+|    `--[no-]local`|`false`|Execute command on localhost after connecting to SSH node|
+|`-t`, `--[no-]tty`|none|Allocate TTY|
+|`-c`, `--cluster`|none|Specify the Teleport cluster to connect|
+|`-o`, `--option`|none|OpenSSH options in the format used in the configuration file|
+|`-N`, `--[no-]no-remote-exec`|none|Don't execute remote command, useful for port forwarding|
+|`-X`, `--[no-]x11-untrusted`|none|Requests untrusted (secure) X11 forwarding for this session|
+|`-Y`, `--[no-]x11-trusted`|none|Requests trusted (insecure) X11 forwarding for this session. This can make your local machine vulnerable to attacks, use with caution|
+|    `--x11-untrusted-timeout`|`10m`|Sets a timeout for untrusted X11 forwarding, after which the client will reject any forwarding requests from the server|
+|    `--invite`|none|A comma separated list of people to mark as invited for the session.|
+|    `--reason`|none|The purpose of the session.|
+|    `--[no-]participant-req`|none|Displays a verbose list of required participants in a moderated session.|
+|    `--request-reason`|none|Reason for requesting access|
+|    `--request-mode`|`resource`|Type of automatic access request to make (off, resource, role)|
+|    `--[no-]disable-access-request`|none|Disable automatic resource access requests (DEPRECATED: use --request-mode=off)|
+|    `--log-dir`|none|Directory to log separated command output, when executing on multiple nodes. If set, output from each node will also be labeled in the terminal.|
+|    `--[no-]no-resume`|none|Disable SSH connection resumption|
+|    `--[no-]relogin`|`true`|Permit performing an authentication attempt on a failed command|
+Arguments:
 
-Enroll this device as a trusted device. Requires Teleport Enterprise.
+|Argument|Default|Description|
+|---|---|---|
+|[user@]host|none (optional)|Remote hostname and the login to use, this argument is required|
+|command|none (optional)|Command to execute on a remote host|
+
+## tsh status
+
+Display the list of proxy servers and retrieved certificates.
 
 Usage:
 
 ```code
-$ tsh device enroll [<flags>]
+$ tsh status [<flags>]
 ```
 
 Flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|`--[no-]current-device`|none|Attempts to register and enroll the current device. Requires device admin privileges.|
-|`--token`|none|Device enrollment token|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|`-v`, `--[no-]verbose`|none|Show extra status information after successful login|
 ## tsh svid issue
 
 Issue a SPIFFE SVID using Teleport Workload Identity and write it to a local
@@ -1290,6 +1347,36 @@ Arguments:
 |---|---|---|
 |path|none (required)|Path to use for the SVID SPIFFE ID. Must have a preceding '/'.|
 
+## tsh version
+
+Print the tsh client and Proxy server versions for the current context.
+
+Usage:
+
+```code
+$ tsh version [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|`-f`, `--format`|`text`|Format output (text, json, yaml)|
+|    `--[no-]client`|none|Show the client version only (no server required).|
+## tsh vnet
+
+Start Teleport VNet, a virtual network for TCP application access.
+
+Usage:
+
+```code
+$ tsh vnet [<flags>]
+```
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
 ## tsh workload-identity issue-x509
 
 Use Teleport Workload Identity to issue an X509 credential write it to a local
@@ -1309,90 +1396,3 @@ Flags:
 |`--label-selector`|none|A label-based selector for which workload identities to issue. Multiple labels can be provided using ','.|
 |`--credential-ttl`|`1h`|Sets the time to live for the credential.|
 |`--output`|none|Path to the directory to write the SVID into.|
-## tsh vnet
-
-Start Teleport VNet, a virtual network for TCP application access.
-
-Usage:
-
-```code
-$ tsh vnet [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-## tsh git login
-
-Opens a browser and retrieves your login from GitHub.
-
-Usage:
-
-```code
-$ tsh git login --github-org=GITHUB-ORG [<flags>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`--github-org`|none|GitHub organization|
-|`--[no-]force`|none|Force a login|
-## tsh git ls
-
-List Git servers.
-
-Usage:
-
-```code
-$ tsh git ls [<flags>] [<labels>]
-```
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|`-f`, `--format`|`text`|Format output (text, json, yaml)|
-|    `--search`|none|List of comma separated search keywords or phrases enclosed in quotations (e.g. --search=foo,bar,"some phrase")|
-|    `--query`|none|Query by predicate language enclosed in single quotes. Supports ==, !=, &&, and || (e.g. --query='labels["key1"] == "value1" && labels["key2"] != "value2"')|
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|labels|none (optional)|List of comma separated labels to filter by labels (e.g. key1=value1,key2=value2)|
-
-## tsh git config
-
-Check Teleport config on the working Git directory. Or provide an action
-('update' or 'reset') to configure the Git repo.
-
-Usage:
-
-```code
-$ tsh git config [<action>]
-```
-
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|action|none (optional)|Optional action to perform. 'update' to configure the Git repo to proxy Git commands through Teleport. 'reset' to clear Teleport configuration from the Git repo.|
-
-## tsh git clone
-
-Clone a Git repository.
-
-Usage:
-
-```code
-$ tsh git clone <repository> [<directory>]
-```
-
-Arguments:
-
-|Argument|Default|Description|
-|---|---|---|
-|repository|none (required)|Git URL of the repository to clone.|
-|directory|none (optional)|The name of a new directory to clone into.|
-
