@@ -282,6 +282,21 @@ Global flags:
 |---|---|---|
 |@--config@|@config.yaml@|The location of the config file|
 
+## myapp create rocket
+
+Rocket.
+
+Usage:
+
+@@@code
+$ myapp create rocket [<flags>]
+@@@
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--[no-]launch@|none|Whether to launch the Rocket|
 ## myapp hello
 
 Hello.
@@ -308,21 +323,6 @@ Arguments:
 |---|---|---|
 |command|none (optional)|Show help on command.|
 
-## myapp create rocket
-
-Rocket.
-
-Usage:
-
-@@@code
-$ myapp create rocket [<flags>]
-@@@
-
-Flags:
-
-|Flag|Default|Description|
-|---|---|---|
-|@--[no-]launch@|none|Whether to launch the Rocket|
 `,
 		},
 		{
@@ -561,6 +561,74 @@ Usage:
 
 @@@code
 $ myapp validate
+@@@
+
+`,
+		},
+		{
+			name: "level-3 command order",
+			makeApp: func() *kingpin.Application {
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
+				mfa := app.Command("mfa", "Manage MFA resources.")
+				mfa.Command("add", "Add an MFA device.")
+				app.Command("create", "Create a resource")
+				return app
+			},
+			expected: `---
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+myapp.
+
+@@@code
+$ myapp [<flags>] <command> [<args> ...]
+@@@
+
+This is the main CLI tool.
+
+Global flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|@config.yaml@|The location of the config file|
+
+## myapp create
+
+Create a resource
+
+Usage:
+
+@@@code
+$ myapp create
+@@@
+
+## myapp help
+
+Show help.
+
+Usage:
+
+@@@code
+$ myapp help [<command>...]
+@@@
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
+
+## myapp mfa add
+
+Add an MFA device.
+
+Usage:
+
+@@@code
+$ myapp mfa add
 @@@
 
 `,

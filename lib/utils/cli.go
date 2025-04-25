@@ -630,7 +630,7 @@ func (c *cmdModelCollection) Len() int {
 }
 
 func (c *cmdModelCollection) Less(i, j int) bool {
-	return c.commands[i].Name < c.commands[j].Name
+	return c.commands[i].FullCommand < c.commands[j].FullCommand
 }
 
 func (c *cmdModelCollection) Swap(i, j int) {
