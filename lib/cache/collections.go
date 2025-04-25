@@ -68,6 +68,11 @@ type collections struct {
 	userGroups                       *collection[types.UserGroup]
 	identityCenterAccounts           *collection[*identitycenterv1.Account]
 	identityCenterAccountAssignments *collection[*identitycenterv1.AccountAssignment]
+	clusterName                      *collection[types.ClusterName]
+	auditConfig                      *collection[types.ClusterAuditConfig]
+	networkingConfig                 *collection[types.ClusterNetworkingConfig]
+	authPreference                   *collection[types.AuthPreference]
+	sessionRecordingConfig           *collection[types.SessionRecordingConfig]
 }
 
 // setupCollections ensures that the appropriate [collection] is
@@ -234,6 +239,46 @@ func setupCollections(c Config) (*collections, error) {
 
 			out.identityCenterAccountAssignments = collect
 			out.byKind[resourceKind] = out.identityCenterAccountAssignments
+		case types.KindClusterName:
+			collect, err := newClusterNameCollection(c.ClusterConfig, watch)
+			if err != nil {
+				return nil, trace.Wrap(err)
+			}
+
+			out.clusterName = collect
+			out.byKind[resourceKind] = out.clusterName
+		case types.KindClusterAuditConfig:
+			collect, err := newClusterAuditConfigCollection(c.ClusterConfig, watch)
+			if err != nil {
+				return nil, trace.Wrap(err)
+			}
+
+			out.auditConfig = collect
+			out.byKind[resourceKind] = out.auditConfig
+		case types.KindClusterNetworkingConfig:
+			collect, err := newClusterNetworkingConfigCollection(c.ClusterConfig, watch)
+			if err != nil {
+				return nil, trace.Wrap(err)
+			}
+
+			out.networkingConfig = collect
+			out.byKind[resourceKind] = out.networkingConfig
+		case types.KindClusterAuthPreference:
+			collect, err := newAuthPreferenceCollection(c.ClusterConfig, watch)
+			if err != nil {
+				return nil, trace.Wrap(err)
+			}
+
+			out.authPreference = collect
+			out.byKind[resourceKind] = out.authPreference
+		case types.KindSessionRecordingConfig:
+			collect, err := newSessionRecordingConfigCollection(c.ClusterConfig, watch)
+			if err != nil {
+				return nil, trace.Wrap(err)
+			}
+
+			out.sessionRecordingConfig = collect
+			out.byKind[resourceKind] = out.sessionRecordingConfig
 		}
 	}
 
