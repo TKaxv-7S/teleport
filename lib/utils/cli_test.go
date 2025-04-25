@@ -297,6 +297,7 @@ Flags:
 |Flag|Default|Description|
 |---|---|---|
 |@--[no-]launch@|none|Whether to launch the Rocket|
+
 ## myapp hello
 
 Hello.
@@ -404,6 +405,7 @@ Flags:
 |---|---|---|
 |@--verbosity@|@3@|Verbosity level.|
 |@--[no-]dry-run@|@false@|Whether to use dry-run mode|
+
 ## myapp help
 
 Show help.
