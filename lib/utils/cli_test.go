@@ -487,6 +487,84 @@ Arguments:
 
 `,
 		},
+		{
+			name: "sub-command order",
+			makeApp: func() *kingpin.Application {
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
+				app.Command("create", "Create a resource.")
+				app.Command("validate", "Validate the config.")
+				app.Command("connect", "Connect to a server.")
+				return app
+			},
+			expected: `---
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+myapp.
+
+@@@code
+$ myapp [<flags>] <command> [<args> ...]
+@@@
+
+This is the main CLI tool.
+
+Global flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|config.yaml|The location of the config file|
+
+## myapp connect
+
+Connect to a server.
+
+Usage:
+
+@@@code
+$ myapp connect
+@@@
+
+## myapp create
+
+Create a resource.
+
+Usage:
+
+@@@code
+$ myapp create
+@@@
+
+## myapp help
+
+Show help.
+
+Usage:
+
+@@@code
+$ myapp help [<command>...]
+@@@
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
+
+## myapp validate
+
+Validate validate config.
+
+Usage:
+
+@@@code
+$ myapp validate
+@@@
+
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
