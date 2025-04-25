@@ -62,6 +62,12 @@ type AWSSigninRequest struct {
 	// Integration is the Integration name to use to generate credentials.
 	// If empty, it will use ambient credentials
 	Integration string
+	// ProfileARN is the ARN of the AWS IAM Roles Anywhere profile to use.
+	// Can only be used when the Integration is set and its subkind is AWS Roles Anywhere.
+	ProfileARN string
+	// ProfileAcceptsRoleSessionName is true if the profile accepts role session name.
+	// Can only be used when the Integration is set and its subkind is AWS Roles Anywhere.
+	ProfileAcceptsRoleSessionName bool
 }
 
 // CheckAndSetDefaults validates the request.
@@ -180,7 +186,14 @@ func (c *cloud) getAWSSigninToken(ctx context.Context, req *AWSSigninRequest, en
 	// Sign In requests target IAM endpoints which don't require a region.
 	region := ""
 	baseCfg, err := c.awsCachedProvider.GetConfig(ctx, region,
-		awsconfig.WithCredentialsMaybeIntegration(req.Integration),
+		awsconfig.WithCredentialsMaybeIntegration2(awsconfig.IntegrationCredentialsMetadata{
+			IntegrationName: req.Integration,
+			RolesAnywhereMetadata: awsconfig.RolesAnywhereMetadata{
+				ProfileARN:                    req.ProfileARN,
+				ProfileAcceptsRoleSessionName: req.ProfileAcceptsRoleSessionName,
+				RoleARN:                       req.Identity.RouteToApp.AWSRoleARN,
+			},
+		}),
 	)
 	if err != nil {
 		return "", trace.Wrap(err)
@@ -226,6 +239,7 @@ func (c *cloud) getAWSSigninToken(ctx context.Context, req *AWSSigninRequest, en
 		append(c.cfg.AWSConfigOptions,
 			awsconfig.WithCredentialsMaybeIntegration(req.Integration),
 			awsconfig.WithBaseCredentialsProvider(baseCfg.Credentials),
+			// TODO(marco): if it doesn't work, remove this one (?)
 			awsconfig.WithDetailedAssumeRole(assumeRole),
 		)...,
 	)

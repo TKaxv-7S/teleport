@@ -170,13 +170,22 @@ func (s *signerHandler) serveCommonRequest(sessCtx *common.SessionContext, w htt
 		return trace.Wrap(err)
 	}
 
+	integrationCredentialsMetadata := awsconfig.IntegrationCredentialsMetadata{
+		IntegrationName: sessCtx.App.GetIntegration(),
+		RolesAnywhereMetadata: awsconfig.RolesAnywhereMetadata{
+			ProfileARN:                    sessCtx.App.GetAWSRolesAnywhereProfileARN(),
+			ProfileAcceptsRoleSessionName: sessCtx.App.GetAWSRolesAnywhereAcceptRoleSessionName(),
+			RoleARN:                       sessCtx.Identity.RouteToApp.AWSRoleARN,
+		},
+	}
+
 	awsCfg, err := s.AWSConfigProvider.GetConfig(s.closeContext, re.SigningRegion,
 		awsconfig.WithDetailedAssumeRole(awsconfig.AssumeRole{
 			RoleARN:     sessCtx.Identity.RouteToApp.AWSRoleARN,
 			ExternalID:  sessCtx.App.GetAWSExternalID(),
 			SessionName: sessCtx.Identity.Username,
 		}),
-		awsconfig.WithCredentialsMaybeIntegration(sessCtx.App.GetIntegration()),
+		awsconfig.WithCredentialsMaybeIntegration2(integrationCredentialsMetadata),
 	)
 	if err != nil {
 		return trace.Wrap(err)
