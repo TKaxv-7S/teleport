@@ -635,10 +635,76 @@ $ myapp mfa add
 
 `,
 		},
+		{
+			name: "empty arg",
+			makeApp: func() *kingpin.Application {
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
+				app.Command("kubectl", "Proxy kubectl commands.")
+				kubectl := app.Command("kubectl", "Runs a kubectl command on a Kubernetes cluster.").Interspersed(false)
+				// This hack is required in order to accept any args for tsh kubectl.
+				kubectl.Arg("", "").StringsVar(new([]string))
+
+				return app
+			},
+			expected: `---
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+myapp.
+
+@@@code
+$ myapp [<flags>] <command> [<args> ...]
+@@@
+
+This is the main CLI tool.
+
+Global flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|@config.yaml@|The location of the config file|
+
+## myapp help
+
+Show help.
+
+Usage:
+
+@@@code
+$ myapp help [<command>...]
+@@@
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
+
+## myapp kubectl
+
+Proxy kubectl commands.
+
+Usage:
+
+@@@code
+$ myapp kubectl [<args>...]
+@@@
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|args|none (optional)|Arbitrary arguments|
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			app := tt.makeApp()
+
 			var buffer bytes.Buffer
 			app.Terminate(func(int) {})
 			PrintCLIDocs(&buffer, app)
