@@ -582,10 +582,24 @@ func argsToColumns(a []*kingpin.ArgModel) [][3]string {
 			continue
 		}
 
+		var argName string
+		if arg.Name != "" {
+			argName = arg.Name
+		} else {
+			argName = "args"
+		}
+
+		var help string
+		if arg.Help != "" {
+			help = formatHelp(arg.Help)
+		} else {
+			help = "Arbitrary arguments"
+		}
+
 		rows = append(rows, [3]string{
-			arg.Name,
+			argName,
 			formatDefaultArgValue(arg),
-			formatHelp(arg.Help),
+			help,
 		})
 	}
 	return rows
@@ -669,6 +683,32 @@ func formatDefaultArgValue(arg *kingpin.ArgModel) string {
 	return ret
 }
 
+// Optional interface for flags that can be repeated. Taken from
+// alecthomas/kingpin/v2.
+type repeatableFlag interface {
+	IsCumulative() bool
+}
+
+func formatUsageArg(arg *kingpin.ArgModel) string {
+	var ret string
+	switch {
+	case arg.PlaceHolder != "":
+		ret = arg.PlaceHolder
+	// Some special cases have empty arg names
+	case arg.Name == "":
+		ret = "args"
+	default:
+		ret = "<" + arg.Name + ">"
+	}
+	if v, ok := arg.Value.(repeatableFlag); ok && v.IsCumulative() {
+		ret += "..."
+	}
+	if !arg.Required {
+		ret = "[" + ret + "]"
+	}
+	return ret
+}
+
 func formatHelp(help string) string {
 	return strings.NewReplacer("{", `\{`, "}", `\}`).Replace(help)
 }
@@ -689,6 +729,7 @@ func PrintCLIDocs(usageWriter io.Writer, app *kingpin.Application) {
 		"FlagsToColumns":              flagsToColumns,
 		"ArgsToColumns":               argsToColumns,
 		"SortCommandsByName":          sortCommandsByName,
+		"FormatUsageArg":              formatUsageArg,
 	})
 	app.UsageTemplate(docsUsageTemplate)
 	app.Usage([]string{""})

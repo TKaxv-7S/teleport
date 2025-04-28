@@ -641,7 +641,7 @@ $ myapp mfa add
 				app := InitCLIParser("myapp", "This is the main CLI tool.")
 				app.Flag("config", "The location of the config file").Default("config.yaml").String()
 				app.Command("kubectl", "Proxy kubectl commands.")
-				kubectl := app.Command("kubectl", "Runs a kubectl command on a Kubernetes cluster.").Interspersed(false)
+				kubectl := app.Command("kubectl", "Proxy kubectl commands.").Interspersed(false)
 				// This hack is required in order to accept any args for tsh kubectl.
 				kubectl.Arg("", "").StringsVar(new([]string))
 
@@ -690,7 +690,7 @@ Proxy kubectl commands.
 Usage:
 
 @@@code
-$ myapp kubectl [<args>...]
+$ myapp kubectl [args...]
 @@@
 
 Arguments:
@@ -698,6 +698,7 @@ Arguments:
 |Argument|Default|Description|
 |---|---|---|
 |args|none (optional)|Arbitrary arguments|
+
 `,
 		},
 	}
