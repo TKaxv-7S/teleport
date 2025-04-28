@@ -21,6 +21,7 @@ import (
 
 	"github.com/gravitational/trace"
 
+	autoupdatev1 "github.com/gravitational/teleport/api/gen/proto/go/teleport/autoupdate/v1"
 	healthcheckconfigv1 "github.com/gravitational/teleport/api/gen/proto/go/teleport/healthcheckconfig/v1"
 	identitycenterv1 "github.com/gravitational/teleport/api/gen/proto/go/teleport/identitycenter/v1"
 	machineidv1 "github.com/gravitational/teleport/api/gen/proto/go/teleport/machineid/v1"
@@ -75,6 +76,9 @@ type collections struct {
 	reverseTunnels                   *collection[types.ReverseTunnel]
 	spiffeFederations                *collection[*machineidv1.SPIFFEFederation]
 	workloadIdentity                 *collection[*workloadidentityv1.WorkloadIdentity]
+	autoUpdateConfig                 *collection[*autoupdatev1.AutoUpdateConfig]
+	autoUpdateVerion                 *collection[*autoupdatev1.AutoUpdateVersion]
+	autoUpdateRollout                *collection[*autoupdatev1.AutoUpdateAgentRollout]
 }
 
 // setupCollections ensures that the appropriate [collection] is
@@ -273,6 +277,30 @@ func setupCollections(c Config) (*collections, error) {
 
 			out.workloadIdentity = collect
 			out.byKind[resourceKind] = out.workloadIdentity
+		case types.KindAutoUpdateConfig:
+			collect, err := newAutoUpdateConfigCollection(c.AutoUpdateService, watch)
+			if err != nil {
+				return nil, trace.Wrap(err)
+			}
+
+			out.autoUpdateConfig = collect
+			out.byKind[resourceKind] = out.autoUpdateConfig
+		case types.KindAutoUpdateVersion:
+			collect, err := newAutoUpdateVersionCollection(c.AutoUpdateService, watch)
+			if err != nil {
+				return nil, trace.Wrap(err)
+			}
+
+			out.autoUpdateVerion = collect
+			out.byKind[resourceKind] = out.autoUpdateVerion
+		case types.KindAutoUpdateAgentRollout:
+			collect, err := newAutoUpdateRolloutCollection(c.AutoUpdateService, watch)
+			if err != nil {
+				return nil, trace.Wrap(err)
+			}
+
+			out.autoUpdateRollout = collect
+			out.byKind[resourceKind] = out.autoUpdateRollout
 		}
 	}
 
