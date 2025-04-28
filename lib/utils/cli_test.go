@@ -701,6 +701,65 @@ Arguments:
 
 `,
 		},
+		{
+			name: "hidden flag",
+			makeApp: func() *kingpin.Application {
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
+				app.Command("kubectl", "Proxy kubectl commands.")
+				kubectl := app.Command("kubectl", "Proxy kubectl commands.").Interspersed(false)
+				kubectl.Flag("diag", "Run diagnostics").Hidden().Bool()
+
+				return app
+			},
+			expected: `---
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+myapp.
+
+@@@code
+$ myapp [<flags>] <command> [<args> ...]
+@@@
+
+This is the main CLI tool.
+
+Global flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|@config.yaml@|The location of the config file|
+
+## myapp help
+
+Show help.
+
+Usage:
+
+@@@code
+$ myapp help [<command>...]
+@@@
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
+
+## myapp kubectl
+
+Proxy kubectl commands.
+
+Usage:
+
+@@@code
+$ myapp kubectl
+@@@
+
+`,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
