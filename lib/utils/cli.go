@@ -563,17 +563,14 @@ func flagsToColumns(f []*kingpin.FlagModel) [][3]string {
 		}
 	}
 	for _, flag := range f {
-		defaultVal := "none"
-		if len(flag.Default) > 0 {
-			defaultVal = formatDefaultValues(flag.Default)
+		if flag.Hidden {
+			continue
 		}
-		if !flag.Hidden {
-			rows = append(rows, [3]string{
-				formatFlagForTable(haveShort, flag),
-				defaultVal,
-				formatHelp(flag.Help),
-			})
-		}
+		rows = append(rows, [3]string{
+			formatFlagForTable(haveShort, flag),
+			formatDefaultFlagValue(flag),
+			formatHelp(flag.Help),
+		})
 	}
 	return rows
 }
@@ -581,24 +578,15 @@ func flagsToColumns(f []*kingpin.FlagModel) [][3]string {
 func argsToColumns(a []*kingpin.ArgModel) [][3]string {
 	rows := [][3]string{}
 	for _, arg := range a {
-		if !arg.Hidden {
-			defaultVal := "none"
-			if len(arg.Default) > 0 {
-				defaultVal = formatDefaultValues(arg.Default)
-			}
-
-			if arg.Required {
-				defaultVal += " (required)"
-			} else {
-				defaultVal += " (optional)"
-			}
-
-			rows = append(rows, [3]string{
-				arg.Name,
-				defaultVal,
-				formatHelp(arg.Help),
-			})
+		if arg.Hidden {
+			continue
 		}
+
+		rows = append(rows, [3]string{
+			arg.Name,
+			formatDefaultArgValue(arg),
+			formatHelp(arg.Help),
+		})
 	}
 	return rows
 }
@@ -646,12 +634,39 @@ func sortCommandsByName(cmds []*kingpin.CmdModel) []*kingpin.CmdModel {
 	return col.commands
 }
 
-func formatDefaultValues(vals []string) string {
-	ret := make([]string, len(vals))
-	for i, v := range vals {
-		ret[i] = fmt.Sprintf("`%v`", v)
+func formatDefaultFlagValue(flag *kingpin.FlagModel) string {
+	switch {
+	case len(flag.Default) == 0 && flag.IsBoolFlag():
+		return "`false`"
+	case len(flag.Default) > 0:
+		ret := make([]string, len(flag.Default))
+		for i, v := range flag.Default {
+			ret[i] = fmt.Sprintf("`%v`", v)
+		}
+		return strings.Join(ret, ",")
+	default:
+		return "none"
 	}
-	return strings.Join(ret, ",")
+}
+
+func formatDefaultArgValue(arg *kingpin.ArgModel) string {
+	var ret string
+	if len(arg.Default) > 0 {
+		def := make([]string, len(arg.Default))
+		for i, v := range arg.Default {
+			def[i] = fmt.Sprintf("`%v`", v)
+		}
+		ret = strings.Join(def, ",")
+	} else {
+		ret = "none"
+	}
+	if arg.Required {
+		ret += " (required)"
+	} else {
+		ret += " (optional)"
+	}
+
+	return ret
 }
 
 func formatHelp(help string) string {

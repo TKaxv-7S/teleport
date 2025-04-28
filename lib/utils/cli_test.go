@@ -296,7 +296,7 @@ Flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|@--[no-]launch@|none|Whether to launch the Rocket|
+|@--[no-]launch@|@false@|Whether to launch the Rocket|
 
 ## myapp hello
 
