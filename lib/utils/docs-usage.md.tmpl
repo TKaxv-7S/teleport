@@ -16,7 +16,7 @@ Usage:
 $ {{$appName}} {{.FullCommand}}{{template "FormatCommand" .}}
 ```
 
-{{ if .Flags -}}
+{{ if .Flags|AnyVisibleFlags -}}
 Flags:
 
 |Flag|Default|Description|

@@ -575,6 +575,15 @@ func flagsToColumns(f []*kingpin.FlagModel) [][3]string {
 	return rows
 }
 
+func anyVisibleFlags(f []*kingpin.FlagModel) bool {
+	for _, l := range f {
+		if !l.Hidden {
+			return true
+		}
+	}
+	return false
+}
+
 func argsToColumns(a []*kingpin.ArgModel) [][3]string {
 	rows := [][3]string{}
 	for _, arg := range a {
@@ -730,6 +739,7 @@ func PrintCLIDocs(usageWriter io.Writer, app *kingpin.Application) {
 		"ArgsToColumns":               argsToColumns,
 		"SortCommandsByName":          sortCommandsByName,
 		"FormatUsageArg":              formatUsageArg,
+		"AnyVisibleFlags":             anyVisibleFlags,
 	})
 	app.UsageTemplate(docsUsageTemplate)
 	app.Usage([]string{""})
