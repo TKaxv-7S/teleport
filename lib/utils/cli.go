@@ -584,6 +584,20 @@ func anyVisibleFlags(f []*kingpin.FlagModel) bool {
 	return false
 }
 
+func anyEnvVarsForCmd(cmd *kingpin.CmdModel) bool {
+	for _, a := range cmd.Args {
+		if a.Envar != "" {
+			return true
+		}
+	}
+	for _, f := range cmd.Flags {
+		if f.Envar != "" {
+			return true
+		}
+	}
+	return false
+}
+
 func argsToColumns(a []*kingpin.ArgModel) [][3]string {
 	rows := [][3]string{}
 	for _, arg := range a {
@@ -609,6 +623,33 @@ func argsToColumns(a []*kingpin.ArgModel) [][3]string {
 			argName,
 			formatDefaultArgValue(arg),
 			help,
+		})
+	}
+	return rows
+}
+
+func envVarsToColumns(cmd *kingpin.CmdModel) [][3]string {
+	rows := [][3]string{}
+	for _, arg := range cmd.Args {
+		if arg.Hidden || arg.Envar == "" {
+			continue
+		}
+
+		rows = append(rows, [3]string{
+			arg.Envar,
+			formatDefaultArgValue(arg),
+			arg.Help,
+		})
+	}
+	for _, flg := range cmd.Flags {
+		if flg.Hidden || flg.Envar == "" {
+			continue
+		}
+
+		rows = append(rows, [3]string{
+			flg.Envar,
+			formatDefaultFlagValue(flg),
+			flg.Help,
 		})
 	}
 	return rows
@@ -734,12 +775,14 @@ var docsUsageTemplate string
 func PrintCLIDocs(usageWriter io.Writer, app *kingpin.Application) {
 	app.UsageWriter(usageWriter)
 	app.UsageFuncs(map[string]any{
-		"FormatThreeColMarkdownTable": formatThreeColMarkdownTable,
-		"FlagsToColumns":              flagsToColumns,
-		"ArgsToColumns":               argsToColumns,
-		"SortCommandsByName":          sortCommandsByName,
-		"FormatUsageArg":              formatUsageArg,
+		"AnyEnvVarsForCmd":            anyEnvVarsForCmd,
 		"AnyVisibleFlags":             anyVisibleFlags,
+		"ArgsToColumns":               argsToColumns,
+		"EnvVarsToColumns":            envVarsToColumns,
+		"FlagsToColumns":              flagsToColumns,
+		"FormatThreeColMarkdownTable": formatThreeColMarkdownTable,
+		"FormatUsageArg":              formatUsageArg,
+		"SortCommandsByName":          sortCommandsByName,
 	})
 	app.UsageTemplate(docsUsageTemplate)
 	app.Usage([]string{""})
