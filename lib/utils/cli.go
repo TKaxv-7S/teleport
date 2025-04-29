@@ -584,13 +584,21 @@ func anyVisibleFlags(f []*kingpin.FlagModel) bool {
 	return false
 }
 
-func anyEnvVarsForCmd(cmd *kingpin.CmdModel) bool {
-	for _, a := range cmd.Args {
+// templateParseContext includes data from a selected command while parsing a
+// template. This is an unexported type from alecthomas/kingpin.
+type templateParseContext struct {
+	SelectedCommand *kingpin.CmdModel
+	*kingpin.FlagGroupModel
+	*kingpin.ArgGroupModel
+}
+
+func anyEnvVarsForCmd(args []*kingpin.ArgModel, flags []*kingpin.FlagModel) bool {
+	for _, a := range args {
 		if a.Envar != "" {
 			return true
 		}
 	}
-	for _, f := range cmd.Flags {
+	for _, f := range flags {
 		if f.Envar != "" {
 			return true
 		}
@@ -628,26 +636,26 @@ func argsToColumns(a []*kingpin.ArgModel) [][3]string {
 	return rows
 }
 
-func envVarsToColumns(cmd *kingpin.CmdModel) [][3]string {
+func envVarsToColumns(args []*kingpin.ArgModel, flags []*kingpin.FlagModel) [][3]string {
 	rows := [][3]string{}
-	for _, arg := range cmd.Args {
+	for _, arg := range args {
 		if arg.Hidden || arg.Envar == "" {
 			continue
 		}
 
 		rows = append(rows, [3]string{
-			arg.Envar,
+			fmt.Sprintf("`%v`", arg.Envar),
 			formatDefaultArgValue(arg),
 			arg.Help,
 		})
 	}
-	for _, flg := range cmd.Flags {
+	for _, flg := range flags {
 		if flg.Hidden || flg.Envar == "" {
 			continue
 		}
 
 		rows = append(rows, [3]string{
-			flg.Envar,
+			fmt.Sprintf("`%v`", flg.Envar),
 			formatDefaultFlagValue(flg),
 			flg.Help,
 		})

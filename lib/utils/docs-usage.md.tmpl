@@ -63,12 +63,13 @@ Global flags:
 {{- .Context.Flags|FlagsToColumns|FormatThreeColMarkdownTable}}
 
 {{end -}}
-{{if .Context.SelectedCommand|AnyEnvVarsForCmd -}}
+{{if AnyEnvVarsForCmd .Context.Args .Context.Flags -}}
 Global environment variables:
 
 |Variable|Default|Description|
 |---|---|---|
-{{- .Context.SelectedCommand|EnvVarsToColumns|FormatThreeColMarkdownTable}}
+{{- EnvVarsToColumns .Context.Args .Context.Flags|FormatThreeColMarkdownTable}}
+
 {{end -}}
 {{if .Context.Args -}}
 Arguments:

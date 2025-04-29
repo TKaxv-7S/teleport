@@ -777,7 +777,7 @@ This guide provides a comprehensive list of commands, arguments, and flags for
 myapp.
 
 @@@code
-$ myapp [<flags>]
+$ myapp [<flags>] [<config>]
 @@@
 
 This is the main CLI tool.
@@ -786,15 +786,20 @@ Global flags:
 
 |Flag|Default|Description|
 |---|---|---|
-|@--config@|@config.yaml@|The location of the config file|
 |@--verbosity@|@3@|Verbosity level.|
 
-Environment variables:
+Global environment variables:
 
 |Variable|Default|Description|
 |---|---|---|
-|@MYAPP_CONFIG@|@config.yaml@|The location of the config file|
+|@MYAPP_CONFIG@|@config.yaml@ (optional)|The location of the config file|
 |@MYAPP_VERBOSITY@|@3@|Verbosity level.|
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|config|@config.yaml@ (optional)|The location of the config file|
 
 `,
 		},
