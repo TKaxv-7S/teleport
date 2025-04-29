@@ -760,6 +760,8 @@ $ myapp kubectl
 
 `,
 		},
+		// TODO: Global flag environtment variables
+		// TODO: Subcommand flag environment variables
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
