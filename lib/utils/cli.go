@@ -793,5 +793,5 @@ func PrintCLIDocs(usageWriter io.Writer, app *kingpin.Application) {
 		"SortCommandsByName":          sortCommandsByName,
 	})
 	app.UsageTemplate(docsUsageTemplate)
-	app.Usage([]string{""})
+	app.Usage(nil)
 }
