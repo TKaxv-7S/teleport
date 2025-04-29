@@ -1,5 +1,5 @@
 {{define "FormatCommand" -}}
-{{if .FlagSummary}} {{.FlagSummary}}{{end -}}
+{{if .Flags|AnyVisibleFlags}}{{if .FlagSummary }} {{.FlagSummary}}{{end}}{{end -}}
     {{range .Args}}{{if not .Hidden}} {{ .|FormatUsageArg}}{{end}}{{end -}}
 {{end -}}
 
