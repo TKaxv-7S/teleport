@@ -760,6 +760,44 @@ $ myapp kubectl
 
 `,
 		},
+		{
+			name: "main command flags with env vars",
+			makeApp: func() *kingpin.Application {
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Envar("MYAPP_CONFIG").Default("config.yaml").String()
+				app.Flag("verbosity", "Verbosity level.").Default("3").Envar("MYAPP_VERBOSITY").Int()
+				return app
+			},
+			expected: `---
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+myapp.
+
+@@@code
+$ myapp [<flags>]
+@@@
+
+This is the main CLI tool.
+
+Global flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|@config.yaml@|The location of the config file|
+|@--verbosity@|@3@|Verbosity level.|
+
+Environment variables:
+
+|Variable|Default|Description|
+|---|---|---|
+|@MYAPP_CONFIG@|@config.yaml@|The location of the config file|
+|@MYAPP_VERBOSITY@|@3@|Verbosity level.|
+
+`,
+		},
 		// TODO: Global flag environtment variables
 		// TODO: Subcommand flag environment variables
 	}
