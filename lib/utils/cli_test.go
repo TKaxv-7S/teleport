@@ -803,8 +803,84 @@ Arguments:
 
 `,
 		},
-		// TODO: Subcommand flag environment variables
-	}
+		{
+			name: "subcommand env vars",
+			makeApp: func() *kingpin.Application {
+				app := InitCLIParser("myapp", "This is the main CLI tool.")
+				app.Flag("config", "The location of the config file").Default("config.yaml").String()
+				create := app.Command("create", "Create a resource.")
+				create.Flag("name", "The name of the resource").Envar("CREATE_NAME").Default("myresource").String()
+				create.Arg("type", "The type of the resource").Envar("CREATE_TYPE").String()
+
+				return app
+			},
+			expected: `---
+title: myapp Reference
+description: Provides a comprehensive list of commands, arguments, and flags for myapp.
+---
+
+This guide provides a comprehensive list of commands, arguments, and flags for
+myapp.
+
+@@@code
+$ myapp [<flags>] <command> [<args> ...]
+@@@
+
+This is the main CLI tool.
+
+Global flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--config@|@config.yaml@|The location of the config file|
+
+## myapp create
+
+Create a resource.
+
+Usage:
+
+@@@code
+$ myapp create [<flags>] [<type>]
+@@@
+
+Environment variables:
+
+|Variable|Default|Description|
+|---|---|---|
+|@CREATE_TYPE@|none (optional)|The type of the resource|
+|@CREATE_NAME@|@myresource@|The name of the resource|
+
+Flags:
+
+|Flag|Default|Description|
+|---|---|---|
+|@--name@|@myresource@|The name of the resource|
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|type|none (optional)|The type of the resource|
+
+## myapp help
+
+Show help.
+
+Usage:
+
+@@@code
+$ myapp help [<command>...]
+@@@
+
+Arguments:
+
+|Argument|Default|Description|
+|---|---|---|
+|command|none (optional)|Show help on command.|
+
+`,
+		}}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			app := tt.makeApp()

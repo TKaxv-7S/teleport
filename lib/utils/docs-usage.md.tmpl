@@ -16,6 +16,15 @@ Usage:
 $ {{$appName}} {{.FullCommand}}{{template "FormatCommand" .}}
 ```
 
+{{if AnyEnvVarsForCmd .Args .Flags -}}
+Environment variables:
+
+|Variable|Default|Description|
+|---|---|---|
+{{- EnvVarsToColumns .Args .Flags|FormatThreeColMarkdownTable}}
+
+{{end -}}
+
 {{ if .Flags|AnyVisibleFlags -}}
 Flags:
 
