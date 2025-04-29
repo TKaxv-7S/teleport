@@ -49,9 +49,11 @@ import (
 	dbobjectimportrulev1pb "github.com/gravitational/teleport/api/gen/proto/go/teleport/dbobjectimportrule/v1"
 	healthcheckconfigv1pb "github.com/gravitational/teleport/api/gen/proto/go/teleport/healthcheckconfig/v1"
 	machineidv1pb "github.com/gravitational/teleport/api/gen/proto/go/teleport/machineid/v1"
+	vnetv1pb "github.com/gravitational/teleport/api/gen/proto/go/teleport/vnet/v1"
 	"github.com/gravitational/teleport/api/types"
 	"github.com/gravitational/teleport/api/types/clusterconfig"
 	apievents "github.com/gravitational/teleport/api/types/events"
+	"github.com/gravitational/teleport/api/types/vnet"
 	"github.com/gravitational/teleport/api/utils/clientutils"
 	"github.com/gravitational/teleport/api/utils/keys"
 	"github.com/gravitational/teleport/lib"
@@ -365,6 +367,9 @@ type InitConfig struct {
 
 	// HealthCheckConfig manages health check config resources.
 	HealthCheckConfig services.HealthCheckConfig
+
+	// VnetConfig manages VNet config resource.
+	VnetConfig services.VnetConfigService
 }
 
 // Init instantiates and configures an instance of AuthServer
@@ -505,6 +510,12 @@ func initCluster(ctx context.Context, cfg InitConfig, asrv *Server) error {
 		ctx, span := cfg.Tracer.Start(gctx, "auth/InitializeAccessGraphSettings")
 		defer span.End()
 		return trace.Wrap(initializeAccessGraphSettings(ctx, asrv))
+	})
+
+	g.Go(func() error {
+		ctx, span := cfg.Tracer.Start(gctx, "auth/InitializeVnetConfig")
+		defer span.End()
+		return trace.Wrap(initializeVnetConfig(ctx, asrv))
 	})
 
 	g.Go(func() error {
@@ -1036,6 +1047,31 @@ func initializeAccessGraphSettings(ctx context.Context, asrv *Server) error {
 
 	asrv.logger.InfoContext(ctx, "Creating access graph settings", "settings", stored)
 	_, err = asrv.CreateAccessGraphSettings(ctx, stored)
+	if trace.IsAlreadyExists(err) {
+		return nil
+	}
+
+	return trace.Wrap(err)
+}
+
+func initializeVnetConfig(ctx context.Context, asrv *Server) error {
+	stored, err := asrv.Services.GetVnetConfig(ctx)
+	if err != nil && !trace.IsNotFound(err) {
+		return trace.Wrap(err)
+	}
+	if stored != nil {
+		return nil
+	}
+
+	stored, err = vnet.NewVnetConfig(&vnetv1pb.VnetConfigSpec{
+		Ipv4CidrRange: vnet.DefaultIPv4CIDRRange,
+	})
+	if err != nil {
+		return trace.Wrap(err)
+	}
+
+	asrv.logger.InfoContext(ctx, "Creating VNet config", "vnet_config", "stored")
+	_, err = asrv.CreateVnetConfig(ctx, stored)
 	if trace.IsAlreadyExists(err) {
 		return nil
 	}

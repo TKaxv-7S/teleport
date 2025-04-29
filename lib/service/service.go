@@ -2197,6 +2197,7 @@ func (process *TeleportProcess) initAuthService() error {
 			HTTPClientForAWSSTS:     cfg.Auth.HTTPClientForAWSSTS,
 			Tracer:                  process.TracingProvider.Tracer(teleport.ComponentAuth),
 			Logger:                  logger,
+			// VnetConfig: TODO?,
 		}, func(as *auth.Server) error {
 			if !process.Config.CachePolicy.Enabled {
 				return nil

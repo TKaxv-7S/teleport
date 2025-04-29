@@ -783,6 +783,7 @@ type Services struct {
 	services.WorkloadIdentityX509Overrides
 	services.SigstorePolicies
 	services.HealthCheckConfig
+	services.VnetConfigService
 }
 
 // GetWebSession returns existing web session described by req.

@@ -16,6 +16,23 @@ const (
 	DefaultIPv4CIDRRange = "100.64.0.0/10"
 )
 
+func NewVnetConfig(spec *vnet.VnetConfigSpec) (*vnet.VnetConfig, error) {
+	config := &vnet.VnetConfig{
+		Kind:    types.KindVnetConfig,
+		Version: types.V1,
+		Metadata: &headerv1.Metadata{
+			Name: types.MetaNameVnetConfig,
+		},
+		Spec: spec,
+	}
+
+	if err := ValidateVnetConfig(config); err != nil {
+		return nil, trace.Wrap(err)
+	}
+
+	return config, nil
+}
+
 func ValidateVnetConfig(vnetConfig *vnet.VnetConfig) error {
 	if vnetConfig.GetKind() != types.KindVnetConfig {
 		return trace.BadParameter("kind must be %q", types.KindVnetConfig)
